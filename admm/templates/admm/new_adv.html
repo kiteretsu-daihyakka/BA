@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Advertisement</title>
+    {% load static %}
+    <style>
+        fieldset{
+            border:none;
+            padding:0px;
+        }
+        fieldset #advDtlTbl{
+            padding-left:20px;
+        }
+        <!-- #imgsHolder img{
+        } -->
+        #advDtlTbl th{
+            padding-right:50px;
+        }
+        h5{
+            font-size:20px;
+            color:green;
+        }
+        .DD{
+            width:174px;
+        }
+        textarea{
+            width:168px;
+        }
+        input,select{
+            height:25px;
+            width:170px;
+        }
+        *{
+            font-size:16px;
+        }
+        #insrtPricingInfo,#submitBtn{
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+            border-radius:7px;
+        }
+        #insrtPricingInfo{
+            background-color:dodgerblue;
+        }
+        #submitBtn{
+            height:40px;
+            width:180px;
+            background-color:#32CD32;
+            font-size:medium;
+            margin-top:20px;
+            right:30px;
+            position:fixed;
+        }
+        #insrtPricingInfo:hover{
+            box-shadow:3px 3px gray;
+        }
+        #submitBtn:hover{
+
+        }
+        .pricingInfoHolderinput{
+            background-color:none;
+            border:0px;
+        }
+        .tmpForm h4{
+            font-size:25px;
+            color:green;
+        }
+        .dilMangeMoreImg{
+            border:1px solid black;
+            height:80px;
+            width:110px;
+            text-align:center;
+            vertical-align:middle;
+            line-height:80px;
+            cursor:pointer;
+            float:left;
+            margin-left:10px;
+        }
+        .imagesOfAdv{
+            float:left;
+        }
+        .imgInput{
+            <!--opacity:0x%;-->
+        }
+    </style>
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script >
+    $(document).ready(function(){
+        $(document).on('change','.daysInput',function(){
+            if($('.daysInput').length==1){
+                return;
+            }
+            var changedInput=$(this);
+            var count=0;
+            $('.daysInput').each(function(){
+                if($(changedInput).val()==$(this).val() && $(changedInput).attr('name')!=$(this).attr('name')){
+                    $(this).css('color','red');
+                    $(changedInput).css('color','red');
+                    count=1;
+                }
+                <!--else{-->
+                    <!--$(changedInput).css('color','black');-->
+                <!--}-->
+            });
+            if(count==0){
+                $(changedInput).css('color','black');
+                <!--alert($(changedInput).css('color'));-->
+                <!--$(document).append("");-->
+                $('.daysInput').each(function(){
+                    <!--alert($(this).css('color'));-->
+                    if($(this).css('color')==$('.tmpEle').css('color')){
+                        var tmpSel=this;
+                        var subCount=0;
+                        $('.daysInput').each(function(){
+                            if($(tmpSel).val()==$(this).val() && $(tmpSel).attr('name')!=$(this).attr('name')){
+                                $(this).css('color','red');
+                                $(changedInput).css('color','red');
+                                subCount=1;
+                            }
+                        });
+                        if(subCount==0){
+                            $(tmpSel).css('color','black');
+                        }
+                    }
+                });
+            }
+        });
+        <!--$(this).scroll(function(){-->
+            <!--$().css('position-->
+        <!--});-->
+        <!--$('#id_subcategory_subcatid').change(function(){-->
+            <!--if($(this).val()=='R' && $(this).attr()[1]=='i'){-->
+                <!--$('#id_advregno,#id_area_areaid').prop('disabled',true);-->
+                <!--$('#id_minquantity,#id_stock,#id_city_cityid').prop('disabled',false);-->
+            <!--}-->
+            <!--else{-->
+                <!--$('#id_minquantity,#id_stock,#id_city_cityid').prop('disabled',true);-->
+                <!--$('#id_advregno,#id_area_areaid').prop('disabled',false);-->
+            <!--}-->
+        <!--});-->
+        $('.dilMangeMoreImg').click(function(){
+            $('.imgInput:last').click();
+        });
+        $('article').on('submit','.tmpForm',function(){
+            if($('#advRegNoErrorMsg').is(':visible')){
+                return false;
+            }
+            var days='';
+            var prices='';
+
+            $('.daysInput').each(function(){
+                days+=','+this.value.toString();
+            });
+            $('#daysList').val(days.substring(1));
+
+            $('.priceInput').each(function(){
+                prices+=','+this.value.toString();
+            });
+            $('#priceList').val(prices.substring(1));
+
+            <!--for($('.priceInput').length){-->
+                <!--$('#priceList').val($('#priceList').val()+",");-->
+            <!--}-->
+            <!--if($('#tmpInputForImgRequired').val==0){-->
+                <!--$('#tmpInputForImgRequired').prop('required',true);-->
+                <!--return false;-->
+            <!--}-->
+            <!--else{-->
+                <!--alert('else');-->
+                <!--$('#tmpInputForImgRequired').prop('required',false);-->
+            <!--}-->
+        });
+        $('#daysList').click(function(){
+
+
+
+        });
+        $('#imgInputContainer').on('change','.imgInput',function(){
+            <!--alert('changed');-->
+            if(this.files && this.files[0]){
+                var reader=new FileReader();
+                <!--alert('coming in if');-->
+                reader.onload=function(e){
+                    <!--alert('onload');-->
+                    $('.imagesOfAdv').append("<img class='img_adv' src='"+e.target.result+"' alt='adv img' height='80px' width='110px' ><i class='fas fa-times' style='cursor:pointer;margin-left:-17px;opacity:80%;font-size:20px;background-color:white;' onclick='removeImg(this)'></i> ");
+                    $('#tmpInputForImgRequired').prop('required',false);
+                    var imgs=$('#tmpInputForImgRequired').val();
+                    if(imgs==''){
+                        imgs=0;
+                    }
+                    $('#tmpInputForImgRequired').val(++imgs);
+                    <!--alert($('#tmpInputForImgRequired').val());-->
+                    <!--alert($('#tmpInputForImgRequired').prop('required'));-->
+                }
+                <!--alert('readDAttaUrl');-->
+                reader.readAsDataURL(this.files[0]);
+                $('#imgInputContainer').append("<input class='imgInput' type='file' accept='images/*' name='advImg"+$('.imgInput').length+1+"' hidden>");
+            }
+            <!--$('.imagesOfAdv').append("<img src='"+$(this).val()+"' alt='adv img' height='100px' width='130px'>");-->
+        });
+        $('#price,#days').focus(function(){
+            $('#errZero,#errEmpty').hide();
+        });
+        $('#insrtPricingInfo').click(function(){
+            days=$('#days').val();
+            price=$('#price').val();
+            if (days=='' || price==''){
+                $('#errEmpty').show();
+                return;
+            }
+            if ( days<= 0 ||  price<= 0){
+                <!--alert('enter greater than 0 as value.');-->
+                $('#errZero').show();
+                return;
+            }
+            dayPriceName=$('.daysInput').last().attr('name');
+            countDWP=parseInt(dayPriceName.charAt(4))+1;
+            $('#for_dwp_loopId').val(countDWP);
+            $('#pricingInfoHolder').append("<tr><td><input class='daysInput' name='days"+countDWP.toString()+"' type='number' required></td><td><input class='priceInput' name='price"+countDWP.toString()+"' type='number' required></td><td style='cursor:pointer' onclick='removeDayPrice(this)'><i class='fas fa-times'></i></td></tr>");
+            <!--$('#pricingInfoHolder td,input').addClass('pricingInfoHolderinput');-->
+            $('#price,#days').val('');
+            $('#days,#price').prop('required',false);
+        });
+        <!--$('#plsImgIcn').click(function(){-->
+            <!--$('.advImgUpld').last().click();-->
+        <!--});-->
+        <!--$('#plsImgIcn').click(function(){-->
+            <!--var cnt=parseInt($('#for_advImg_loopId').val())+1;-->
+            <!--$('#imgsHolder').append("<input class='advImgUpld' type='file' accept='images/*' name='advimg"+ cnt.toString() +"'></input><br>");-->
+            <!--$('#for_advImg_loopId').val(cnt);-->
+        <!--});-->
+        $('#stateDD').change(function(){
+            $('#ctDD').empty();
+            $('#ctDD').append("<option value=''></option>");
+            if($('#categoryDD option:selected').text()!='Rickshaw'){
+                $('#arDD').empty();
+                $('#arDD').append("<option value='' ></option>");
+            }
+            var stateId=$(this).val();
+            if (stateId==''){
+                return;
+            }
+            $.ajax({
+                url:'{% url 'admm:location_citiObjs' %}',
+                data:{
+                    'id':stateId,
+                },
+                dataType:'json',
+                success: function (data){
+                    console.log(data);
+                    $('#ctDD').empty();
+                    $('#ctDD').append("<option value='' ></option>");
+                    for(var i=0;i<data['ctObjs'].length;i++){
+                        $('#ctDD').append("<option value='"+data['ctObjs'][i]['id']+"' >"+data['ctObjs'][i]['cityname']+"</option>");
+                    }
+                }
+            });
+        });
+        $('#ctDD').change(function(){
+            if($('#categoryDD option:selected').text()=='Rickshaw'){
+                return;
+            }
+            $('#arDD').empty();
+            $('#arDD').append("<option value='' ></option>");
+            var ctId=$(this).val();
+            if (ctId==''){
+                return;
+            }
+            $.ajax({
+                url:'{% url 'admm:location_areaObjs' %}',
+                data:{
+                    'id':ctId,
+                },
+                dataType:'json',
+                success: function (data){
+                    console.log(data);
+                    $('#arDD').empty();
+                    $('#arDD').append("<option value='' ></option>");
+                    for(var i=0;i<data['arObjs'].length;i++){
+                        $('#arDD').append("<option value='"+data['arObjs'][i]['id']+"' >"+data['arObjs'][i]['areaname']+"</option>");
+                    }
+                }
+            });
+        });
+
+        $('#categoryDD').change(function(){
+            var cat=$('#categoryDD option:selected').text();
+            if (cat=='Category'){
+                $('#subcategoryDD').empty();
+                {% if request.user.is_staff %}
+                $('#subcategoryDD').append("<option value=''>Subcategory</option>");
+                {% else %}
+                $('#subcategoryDD').append("<option value=''>Subcategory, Commission(%)</option>");
+                {% endif %}
+                return;
+            }
+            if(cat=='Hoarding'){
+                $('.hoardingFild').show();
+                $('.rickFilds').hide();
+                $('.rickFilds input,select').prop('required',false);
+                $('.hoardingFild input,textarea,select').prop('required',true);
+                $('#arDD').prop('required',true);
+            }
+            else if(cat=='Rickshaw'){
+                $('.hoardingFild').hide();
+                $('.hoardingFild input,textarea,select').prop('required',false);
+                $('.rickFilds').show();
+                $('.rickFilds input,select').prop('required',true);
+                $('#arDD').prop('required',false);
+            }
+            $.ajax({
+                url:'{% url 'admm:subCatsDD' %}',
+                data:{
+                    'id':$(this).val(),
+                },
+                dataType:'json',
+                success: function (data){
+                    console.log(data);
+                    $('#subcategoryDD').empty();
+                    {% if request.user.is_staff %}
+                    $('#subcategoryDD').append("<option value=''>Subcategory</option>");
+                    {% else %}
+                    $('#subcategoryDD').append("<option value=''>Subcategory, Commission(%)</option>");
+                    {% endif %}
+                    for(var i=0;i<data['subCats'].length;i++){
+                        <!--alert(obj['statename']);-->
+                        {% if request.user.is_staff %}
+                        $('#subcategoryDD').append("<option value='"+data['subCats'][i]['id']+"' >"+data['subCats'][i]['subcatname']+"</option>");
+                        {% else %}
+                        $('#subcategoryDD').append("<option value='"+data['subCats'][i]['id']+"' >"+data['subCats'][i]['subcatname']+" ("+data['subCats'][i]['commission']+"%)</option>");
+                        {% endif %}
+                    }
+                }
+            });
+        });
+    });
+    </script>
+    <script>
+        function removeImg(ele){
+            $(ele).prev().remove();
+            var imgs=$('#tmpInputForImgRequired').val();
+            $('#tmpInputForImgRequired').val(--imgs);
+            if (imgs==0){
+                $('#tmpInputForImgRequired').val('');
+                $('#tmpInputForImgRequired').prop('required',true);
+            }
+            $(ele).remove();
+        }
+        function removeDayPrice(ele){
+            var last_dayprice_id=$('.daysInput').length;
+            alert(last_dayprice_id);
+            var selector='days'+last_dayprice_id.toString()
+            $(ele).siblings('.daysInput').val($('#'+selector).val());
+            var selector='price'+last_dayprice_id.toString()
+            $(ele).siblings('.priceInput').val($('#'+selector).val());
+            $('#'+selector).parent().remove();
+            $('#for_dwp_loopId').val($('#for_dwp_loopId').val()-1);
+            if($('#for_dwp_loopId').val()==0){
+                $('#days,#price').prop('required',true);
+            }
+        }
+        <!--function submitForm(ele){-->
+            <!--if($('.img_adv').length==0){-->
+                <!--$('#tmpInputForImgRequired').prop('required',true);-->
+                <!--alert('if');-->
+                <!--return false;-->
+            <!--}-->
+            <!--else{-->
+                <!--alert('else');-->
+                <!--$('#tmpInputForImgRequired').prop('required',false);-->
+            <!--}-->
+        <!--}-->
+        function checkMe(ele){
+            var regNo=$(ele).val();
+            if (regNo==''){
+                return;
+            }
+            $.ajax({
+                url:'{% url 'admm:checkAdvRegNo' %}',
+                data:{
+                    'regNoPreCheck':regNo,
+                },
+                dataType:'json',
+                success:function(data){
+                    if(data['count']>=1){
+                        $(ele).css('color','red');
+                        $('#advRegNoErrorMsg').show();
+                    }
+                    else{
+                        $(ele).css('color','black');
+                    }
+                },
+            });
+        }
+        function normalizeMe(ele){
+            $(ele).css('color','black');
+            $('#advRegNoErrorMsg').hide();
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article style="margin-top:100px;">
+<!--<div style="position:fixed;background-color:white;text-align:center;width:100%;margin-top:-41px;">-->
+    <!--<h1 style="color:green;margin-right:300px;padding-top:50px;text-transform:uppercase;">Add New Advertisement</h1>-->
+<!--</div>-->
+    {%for msg in messages%}
+        {{msg}}
+    {%endfor%}
+<form action="" method="post" enctype="multipart/form-data" class="tmpForm" >
+    {% csrf_token %}
+
+
+    <br>
+    <!--Image section-->
+    <div style="text-align:right;width:80%;padding-right:10px;">
+        <button type="submit" id="submitBtn" >Save Advertisement</button>
+    </div>
+
+    <div style="float:left;margin-right:40px;margin-top:60px;">
+        <fieldset>
+        <legend><h5>Advertisement Detail</h5></legend>
+        <div>
+            <table id="advDtlTbl" style="text-align:left;">
+            <tr>
+                <th>Category</th>
+                <td>
+                    <select class="DD" id="categoryDD" required>
+                        <option value=''>Category</option>
+                        {% for cat in categories %}
+                            <option value={{cat.id}} >{{cat.categoryname}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Subcategory</th>
+                <td>
+                    <select class="DD" id="subcategoryDD" required name="subCat">
+                        {% if request.user.is_staff %}
+                        <option value="">Subcategory</option>
+                        {% else %}
+                        <option value="">Subcategory, Commission(%)</option>
+                        {% endif %}
+                    </select>
+                </td>
+            </tr>
+            <tr class="hoardingFild">
+                <th>Registration No.</th>
+                <td><input type="text" required name="advregno" onblur="checkMe(this)" onfocus="normalizeMe(this)"></td>
+            </tr>
+                <tr hidden id="advRegNoErrorMsg">
+                    <td colspan="2">An advertisement having this reg. no. already exists</td>
+                </tr>
+            <tr>
+                <th>Height</th>
+                <td><input type="number" required name="height" min="0"></td>
+            </tr>
+            <tr>
+                <th>Width</th>
+                <td><input type="number" required name="width" min="0"></td>
+            </tr>
+            <tr class="rickFilds">
+                <th>Minimum Quantity</th>
+                <td><input type="number" required name="minQntt" min="0" ></td>
+            </tr>
+            <tr class="rickFilds">
+                <th>Stock</th>
+                <td><input type="number" required name="stok" min="0"></td>
+            </tr>
+            <tr class="hoardingFild">
+                <th>Address</th>
+                <td><textarea required name="addrs"></textarea></td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>
+                    <select class="DD" id="stateDD">
+                        <option value='' ></option>
+                        {% for state in sts %}
+                            <option value={{state.id}} >{{state.statename}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+                <!--<tr>-->
+                    <!--<th>Tmp</th>-->
+                    <!--<td>-->
+                        <!--<select required>-->
+                            <!--<option value=""></option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <tr>
+                <th>City</th>
+                <td>
+                    <select class="DD" id="ctDD" name="citi">
+                        <option value=""></option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="hoardingFild">
+                <th>Area</th>
+                <td>
+                    <select class="DD" id="arDD" name="aria">
+                        <option value=''></option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        </div>
+        </fieldset>
+    </div>
+    <div style="padding-top:60px;">
+        <fieldset style="width:55%;height:auto;border:none;">
+            <legend><h5 >Images</h5></legend>
+            <div id="imgsHolder" style="">
+                <!--name="advimg0"-->
+                <div class="imagesOfAdv" style="float:left;">
+                </div>
+                <div class="dilMangeMoreImg" title="Select image for advertisement" ><i class="fas fa-plus"></i><input id="tmpInputForImgRequired" style="opacity:0;width:0px;" type="number" value="" required></div>
+                <div id="imgInputContainer">
+                    <input type="file" accept="image/*" class="imgInput" name="advImg1" hidden>
+                </div>
+                <br><br>
+                <!--<span hidden>-->
+                    <!--<input id="for_advImg_loopId" type="number" name="for_advImg_loop" value=1  hidden>-->
+                    <!--<input type="file"  accept="image/*" class="advImgUpld" name="advimg1"  required  >&lt;!&ndash;oninvalid="this.setCustomValidity('Select atleast one image')"&ndash;&gt;-->
+                    <!--<span id="plsImgIcn" style="margin-top:44px;cursor:pointer;">&plus;</span><br>-->
+                <!--</span>-->
+            </div>
+        </fieldset>
+    </div>
+    <br><br><br>
+    <div>
+        <fieldset style="border:none;">
+            <legend style=""><h5>Pricing</h5></legend>
+            <!--<div style="margin-left:15px;">-->
+                <!--<span id="errEmpty" hidden>Enter values.</span>-->
+                <!--<span id="errZero" hidden>Enter values greater than zero.</span>-->
+            <!--</div>-->
+            <div style="margin-left:10px;">
+                <!--<input id="days" type="number" oninvalid="this.setCustomValidity('Enter at least one pricing detail')" oninput="this.setCustomValidity('')" placeholder="Number of days" required>&nbsp;&nbsp;-->
+                <!--<input id="price" type="number" oninvalid="this.setCustomValidity('Enter at least one pricing detail')" oninput="this.setCustomValidity('')" placeholder="Price " required>-->
+
+                <input type="text" id="daysList" name="daysList">
+                <input type="text" id="priceList" name="priceList">
+
+                <table id="pricingInfoHolder">
+                    <tr>
+                        <th>Days</th>
+                        <th>Price</th>
+                        <th><button type="button" id="insrtPricingInfo" style="height:35px;width:150px;">Add New Row</button></th>
+                    </tr>
+                    <tr>
+                        <td><input class="daysInput" name="days1" type="number" required min="0"></td>
+                        <td><input class="priceInput" name="price1" type="number" required min="0"></td>
+                    </tr>
+                </table>
+            </div>
+
+        </fieldset>
+    </div>
+    <br>
+    <input id="for_dwp_loopId" type="number" name="for_dwp_loop" value=1 hidden>
+    <br>
+
+        <br><br>
+</form>
+    <p class='tmpEle' style='color:red;' hidden></p>
+
+    <!--<form action="{% url 'admm:advcreatenewTmp' %} " method="post" enctype="multipart/form-data" class="tmpForm" >-->
+         <!--{% csrf_token %}-->
+        <!--<input type="text" id="daysList" name="daysList">-->
+        <!--<input type="text" id="priceList" name="priceList">-->
+        <!--<button type="submit"></button>-->
+    <!--</form>-->
+
+</article>
+</html>
+
+
+
+
+
+
+
+

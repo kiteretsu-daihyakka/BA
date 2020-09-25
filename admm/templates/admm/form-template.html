@@ -1,0 +1,53 @@
+<style>
+    fieldset{
+        border:none;
+    }
+    p{
+        font-weight:bold;
+    }
+</style>
+<div style="width:500px;">
+    {% for field in form %}
+        <fieldset>
+            <p>{{ field.label_tag }}</p>
+            <!--{{field.errors}}-->
+            {{field}}
+        </fieldset>
+    {%endfor%}
+</div>
+{% load static %}
+<!--<style>-->
+    <!--fieldset>input,select{-->
+        <!--outline:none;-->
+        <!--border:none;-->
+        <!--width:inherit;-->
+    <!--}-->
+    <!--fieldset{-->
+        <!--width:250px;-->
+        <!--text-transform:uppercase;-->
+        <!--font-family:tahoma;-->
+        <!--color:gray;-->
+        <!--border-width:thin;-->
+    <!--}-->
+    <!--button{-->
+        <!--margin-top:300px;-->
+        <!--margin-left:100px;-->
+        <!--height:30px;-->
+        <!--width:60px;-->
+        <!--cursor:pointer;-->
+        <!--}-->
+    <!--#resBtn{-->
+        <!--margin-left:5px;-->
+        <!--}-->
+    <!--.btn-default{color:black;background-color:lightgray}-->
+    <!--.btn-default:hover{background-color:gray;}-->
+    <!--.btn-default.focus,.btn-default:focus{box-shadow:0 0 0 .2rem rgba(72,180,97,.5)}-->
+    <!--.btn-primary{color:#fff;background-color:#28a745;border-color:#28a745}-->
+    <!--.btn-primary:hover{color:#fff;background-color:#218838;border-color:#1e7e34}-->
+    <!--.btn-primary.focus,.btn-success:focus{box-shadow:0 0 0 .2rem rgba(72,180,97,.5)}-->
+<!--</style>-->
+<!--<script src="{% static 'admm/jquery-3.3.1.min.js'%}" rel="script">-->
+<!--</script>-->
+<!--<script src="{% static 'admm/adminJquery.js' %}">-->
+
+<!--</script>-->

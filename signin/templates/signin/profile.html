@@ -1,0 +1,30 @@
+{% include 'signin/header.html' %}
+{% load static %}
+
+<div class="container" style="margin-top:70px;">
+	<div class="jumbotron">
+	<div class="f-name-se">
+	<label class="label-frm" for="f-name">First Name</label><label class="label-frm" for="f-name">{{pro.first_name}}</label>
+	</div>
+	<div class="f-name-se">
+	<label class="label-frm" for="l-name">Last Name</label><label class="label-frm" for="f-name">{{pro.last_name}}</label>
+	</div>
+	<div class="f-name-se">
+	<label class="label-frm" for="email">Email</label><label class="label-frm" for="f-name">{{pro.email}}</label>
+	</div>
+	<div class="f-name-se">
+	<label class="label-frm" for="mob">MobileNo</label><label class="label-frm" for="f-name">{{pro.mobileno}}</label>
+	</div>
+	<div class="f-name-se">
+	<label class="label-frm" for="add">Address</label><label style="width:300px;" class="label-frm" for="f-name">{{pro.addressline1}}</label>
+	</div>
+	<div class="f-name-se">
+	<label class="label-frm" for="area">Area</label><label class="label-frm" for="f-name">{{pro.area_areaid}}</label>
+	</div>
+	<div class="f-name-sec sign-btn">
+	<a href="{% url 'signin:profileedit' %}"><button type="button" id="editpro" class="btn btn-lg sign_btn" style="background-color:red;">Edit Profile</button></a>
+	<a href="{% url 'signin:chngPwd' %}"><button type="button" class="btn btn-lg sign_btn">Change Password</button></a>
+	</div>
+</div>
+</div>
+{% include 'signin/footer.html' %}

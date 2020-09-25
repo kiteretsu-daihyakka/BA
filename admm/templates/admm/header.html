@@ -1,0 +1,48 @@
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}"/>
+    <script src="{% static 'admm/headerJquery.js' %}" rel="script"></script>
+    <link href="{% static 'admm/mycss/header.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <!--<script>-->
+        <!--$(document).ready(function(){-->
+            <!--$('#myAc').click(function(){-->
+                <!--$('#myAcPanel').fadeToggle();-->
+            <!--});-->
+        <!--});-->
+    <!--</script>-->
+
+<header>
+    <table class="headerContent">
+        <!--<table style="height:100px;width:100%;background-color:#42f57b;border:0px solid black;table-layout:fixed;">-->
+        <tr style="">
+            <td style="width:80%;text-align:left;" title="Go to homepage"><a href="{% url 'admm:index' %}"><img src="{% static 'admm/images/BoardingAlleyLogo.png'%}" class='logo'/></a></td>
+            {% if user %}
+            <!--<td style="border:0px solid black;"><input type="text" style="height:39px;width:400px;" placeholder="Search Here.."></td>-->
+            <td class="effects" title="My Account">
+                <a href="{% url 'admm:profile' %}"><span id="myAc"><i class="fas fa-user" ></i><br><span>Hello,{{user.first_name}}!</span></span></a>
+            </td>
+            <td class="effects">
+                <a href="{% url 'login:logout' %}"><i class="fas fa-sign-out-alt"></i><br>Logout</a>
+            </td>
+            {% endif %}
+            <!--<td><i class="fas fa-search"></i></td>-->
+            <!--{% if user.is_authenticated %}-->
+            <!--{%else%}-->
+                <!--<td><a href="{% url 'login:log_in' %}">Login</a></td>-->
+            <!--{%endif%}-->
+        </tr>
+    </table>
+    <!--<div style="width:100%;margin-top:5px;direction:rtl;">-->
+        <!--<table id="myAcPanel" style="padding-right:70px;margin-left:1130;background-color:#00E676;"  hidden>-->
+        <!--<tr>-->
+            <!--<td><a href="{% url 'admm:profile' %}">My Profile</a></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td><a href="{% url 'login:logout' %}">Logout</a></td>-->
+        <!--</tr>-->
+        <!--</table>-->
+    <!--</div>-->
+</header>
+

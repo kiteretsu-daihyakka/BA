@@ -1,0 +1,251 @@
+
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static '/signin/css/style_category.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static '/signin/css/bootstrap.min.css' %}"/>
+	
+	<link rel="stylesheet" type="text/css" href="{% static '/signin/css/style.css'%}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'signin/css/signup.css' %}"/>
+	
+	<link rel="stylesheet" href="{% static '/signin/fontawesome-free-5.12.0-web/css/all.css' %}"/>
+	<link rel="stylesheet" href="{% static '/signin/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+  <script type="text/javascript" src="{% static 'signin/js/full.js'%}"></script>
+  <script src="{% static 'signin/js/jquery.js' %}?{% now 'U'%}"></script>
+	<script src="{% static 'signin/js/jquery-3.2.1.min.js' %}"></script>
+	<!--link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"-->
+	
+	<!--script src="https://code.jquery.com/jquery-3.2.1.js"-->
+	
+</head>
+
+<body>
+	
+<!-- Header -->
+	<div class="header-se">
+	<div class="logo-se">
+		<a href="/">
+			<img src="{% static 'signin/images/logo.jpg' %}" height="98px" width="150px"></img>
+		</a>
+	</div>
+	<div class="user" >
+		<button class="login-btn"  onclick="document.getElementById('id01').style.display='block'">Login/SignUp</button>
+	</div>
+	<div class="hd-elements">
+		<div class="se-city">
+		<label>   
+		<input type="text" id="city" list="city-op" placeholder=" Select city ">  
+		<datalist id="city-op">  
+    {% for city in cities %}
+		<option value="{{city.cityname}}">  
+    {% endfor %}
+		</datalist>  
+		</label> 
+		</div>
+		<div class="search-se">
+		<i class="fa fa-search se" aria-hidden="true"></i>
+		</div>
+		<div class="cart-se">
+    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+    {% if user.is_authenticated %}
+      <sup><span class="badge-ele">{{items}}</span></sup>
+    {% endif %}
+		</div>
+		<div class="menu-se" onclick="openNav()">
+		<i class="fa fa-bars" aria-hidden="true"></i>
+		</div>
+	</div>
+	</div>
+	
+<!-- Search bar -->
+<div class="search-bar">
+	<input type="text" id="se-text" class="se-text" name="se-text" placeholder="search here...">
+	<i class="fa fa-arrow-circle-right send-ic" aria-hidden="true"></i>
+</div>
+
+
+
+<!-- login popup -->
+<div id="id01" class="modal-se">
+  <span onclick="document.getElementById('id01').style.display='none',refrech_page()" class="close" title="Close Modal" >&times;</span>
+  <form name="login_frm" method="post" class="modal_content" id="login_page"  action="{% url 'signin:login' %}" onsubmit="return loginvalidation()">
+	{% csrf_token %}
+	<div class="login_container">
+	  <h1>SignIn</h1>
+      <hr>
+      <label for="email"><b style="color:black;">Email</b></label><br/>
+	  <input type="text" id="login_email" name="email" class="text-css" placeholder="Enter Email"><br/>
+	  <!-- name="email" -->
+      <span class="error_msg" id="loginspan_email"></span><br/><br/>
+      <label for="psw"><b style="color:black;">Password</b></label><br/>
+	  <input type="password" id="login_pass" name="psw" class="text-css" placeholder="Enter Password" ><br/>
+	  <!-- name="psw" -->
+      <span class="error_msg" id="loginspan_pass"></span><br/><br/>
+	  <span class="error_msg" id="invalid_login">{{invalid_log}}</span><br/><br/>
+      <p class="message">Forget <a href="#" onclick="login_switch()" class="login_switch" >password?</a>.</p>
+	  <a href="{% url 'signin:signup_buyer' %}">Create new Account?</a>
+      <div class="clearfix">
+        <button class="btn-css" type="submit" class="signupbtn" >Sign In</button>
+      </div>
+    </div>
+	
+  </form>
+  <form class="modal_content" id="forget-psw" style="display:none" action="" onsubmit="return rec_validation()">
+	<div class="forget-psw">
+	<h1>Password Recovery</h1>
+	<label for="email"><b style="color:black;">Email</b></label><br/>
+	<input type="text" class="text-css" placeholder="Enter Email" name="rec_email" id="rec_email">
+	<span class="error_msg" id="recspan_email"></span><br/><br/>
+	<button class="btn-css" type="submit" class="re-psw">Send password</button>
+	</div>
+  </form>
+</div>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div><img src="{% static 'signin/images/user.png' %}" class="user-img" height="50px" width="50px"></img></div>
+  <form method="post">
+	  {% csrf_token %}
+	  {% if user.is_authenticated %}
+	  <h1 style="margin-left:70px;font-size:20px">Hello {{user.first_name}}</h1>
+	  {% else %}
+	  <h1 style="margin-left:70px;font-size:20px">Hello User</h1>
+	  {% endif %}
+  <div class="m-list"><a href="">Home</a></div>
+  <div class="m-list"><a href="">About Us</a></div>
+  <div class="m-list drop-btn"><a href="#">Categories<i class="fa fa-caret-down"></i></a> 
+    
+  </div>
+  <div class="dropdwn-container">
+    {% for cat in categories %}
+    <div class="m-list"><a href="{% url 'signin:product' cat.id %}">{{cat.categoryname}}</a></div>
+    {% endfor %}
+  </div>
+  <div class="m-list"><a href="">Wishlist</a></div>
+  <div class="m-list"><a href="">My Orders</a></div>
+  <div class="m-list"><a href="">Contact US</a></div>
+  <div class="m-list"><a href="">Help</a></div>
+   {% if user.is_authenticated %}
+  <div class="m-list"><a href="{% url 'signin:logout' %}">Logout  <i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+   {% endif %}
+  </form>
+</div>
+
+<script src="{% static 'signin/js/jquery.js' %}"></script>
+{% block content %}
+
+<!-- video -->
+<div class="video-se">
+	<video width="100%" height="700px" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+    <source src="{% static 'signin/resource/ad1.mp4' %}" type="video/mp4">
+    </video>
+</div>
+
+<div class="cat-tab">
+	<table class="tab">
+	<tr class="tab-row">
+  
+  {% for cat in categories %}
+  	<td id="a{{cat.categoryid}}" class="cat-box"><a href="{% url 'signin:product' cat.id %}">{{cat.categoryname}}</a></td>
+  {% endfor %}
+	</tr>
+	</table>
+</div>
+
+{% endblock %}
+
+<!--======================footer start======================-->
+
+<footer class="webintern-footer">
+    <div class="webintern-footer-inner">
+    <div class="container">
+    <div class="row">
+    <div class="col-sm-6 col-md-3 ">
+    <a class="webintern-footer-logo" href="#">
+    <img class="img-responsive" src="{% static 'signin/images/logo.jpg' %}" style="width:100px;" alt="">
+    </a>
+    <div class="simple-text dark padding-sm">
+    <p>Totam rem aperiam, eaque ipsa quae ab illo inv ent ore veritatis et quasi architecto beatae vitae dict eaque ipsa quae ab.</p>
+    </div>
+    <div class="empty-space xs-25 sm-25"></div>
+    </div>
+    <div class="col-sm-6 col-md-2 footer-2">
+    <!-- webintern_footer_title -->
+    <h4 class="webintern_footer_title h5"><small>Quick Links</small></h4>
+    <ul class="webintern-footer-list">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Why BA?</a></li>
+        <li><a href="#">Become seller</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Contact Us</a></li>
+    </ul>
+    <div class="empty-space xs-25 sm-25"></div>
+    </div>
+    <div class="col-sm-6 col-md-3 footer-3">
+    <!-- webintern_footer_title -->
+    <h4 class="webintern_footer_title h5"><small> Our Services </small></h4>
+    <ul class="webintern-footer-list">
+        <li><a href="#">Advertisement</a></li>
+        <li><a href="#">Packages</a></li>
+        <li><a href="#">Coupons</a></li>
+        <li><a href="#">Offers</a></li>
+    </ul>
+    <div class="empty-space xs-25"></div>
+    </div>
+    <div class="col-xs-12 col-md-4 col-sm-6">
+    <div class="marg-sm-b30"></div>
+    <!-- webintern_footer_title -->
+    <h4 class="webintern_footer_title h5"><small>Subscribe Newsletter</small></h4>
+    <div class="empty-space marg-lg-b20"></div>
+    <!--
+    <div class="simple-text last dark ">
+    <p>Get latest updates and offers.</p>
+    </div>
+    -->
+    <div class="empty-space marg-lg-b15"></div>
+    <!-- TT-SUBSCRIBE -->
+    <form method="post">
+    <div class="tt-subscribe">
+    <input type="text" required="" placeholder="Enter your email">
+    <div class="tt-subscribe-submit">
+    <i class="fa fa-envelope" aria-hidden="true"></i>
+    <input type="submit" value="">
+    </div>
+    </div>
+    </form>
+    <div class="empty-space marg-lg-b30"></div>
+    <!-- TT-SOCAIL -->
+        <ul class="tt-socail">
+        <li><a class="facebook" href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        <li><a class="instagram" href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+        <li><a class="twitter" href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        <li><a class="google-plus" href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="tt-copy">
+    <div class="container">
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="tt-copy-left">Copyright © company 2018. All rights reserved. </div>
+    </div>
+    <div class="col-sm-6">
+    <div class="tt-copy-right">
+    Created by: compny 
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </footer>
+	
+	<script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

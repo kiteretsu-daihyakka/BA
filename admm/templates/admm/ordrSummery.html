@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/headerJquery.js' %}" rel="script"></script>
+    <script>
+        $(document).ready(function(){
+                $('#prcdBtn').click(function(){
+                    $('.adv_ids').each(function(){
+                        document.getElementById('id_advIdList').value+=($(this).val()).toString()+" ";
+                    });
+                    $('#sbmtBtn').click();
+                });
+                var ttl=0;
+                $('.price').each(function(){
+                    ttl+=parseFloat($(this).text());
+                });
+                $('#id_totalPrice').val(ttl);
+                });
+    </script>
+    <style>
+        h1{
+            text-align:center;
+        }
+        .dateInputs input{
+            border-width:0px 0px 1px 0px;
+            border-style:solid;
+            outline:none;
+            width:100px;
+        }
+        .advImg{
+            height:70px;
+        }
+        .cartTbl{
+            border-collapse:separate;
+            border-spacing:0 15px;
+            width:95%;
+            border:0px solid black;
+            background-color:lightgray;
+        }
+        .cartTbl tr{
+            height:50px;
+
+            <!--border:0px solid black;-->
+        }
+        span{
+            font-weight:bold;
+        }
+    </style>
+</head>
+<article style="margin-left:20px;">
+    <h1 style="color:red;">this is not used right now!!!!</h1>
+    <h1>Order Summary</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'admm:ordr_save' %}" hidden>
+        {% csrf_token%}
+        <input id="id_advIdList" name="advIdList" value="" type="text">
+        <button type="submit" id="sbmtBtn"></button>
+    </form>
+        <!--<tr style="text-align:center;font-weight:bold;">-->
+            <!--<th></th>-->
+            <!--<th>View</th>-->
+            <!--<th colspan="3" style="border-left-width:0px;">Advertisement Detail</th>-->
+            <!--<th style="border-left-width:0px;">Dates Selection</th>-->
+            <!--<th style="border-left-width:0px;">Price</th>-->
+            <!--<th style="border-left-width:0px;margin-bottom:150px;"></th>-->
+        <!--</tr>-->
+        {% for cart_adv in cartAdvs %}
+        <table class="cartTbl" >
+            <tr>
+                <td rowspan="2"></td>
+                <td rowspan="2" style="text-align:center;"><a href="/adminsite/adv/{{cart_adv.id}}/dtl"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                <td rowspan="2"><img alt="advertisement image" src="/media/{{cart_adv.id.defaultimgpath}}" class="advImg"></td>
+                <!--<td>Size: 120x75 </td>-->
+                <td>Size: {{cart_adv.id.height}}x{{cart_adv.id.width}}</td>
+                <td style="">Registratin No: {{cart_adv.id.advregno}}</td>
+                <td>Renting for <span>10 Days</span></td>
+                <td id="amount"><input value="{{cart_adv.id}}" type="number" class="adv_ids" hidden></td>
+                <td rowspan="2" style="margin-left:20px;text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><i class="fa fa-map-marker" aria-hidden="true"></i> {{cart_adv.id.addressline1}},{{cart_adv.id.area_areaid}},{{cart_adv.id.city_cityid}}</td>
+                <td class="dateInputs">{{cart_adv.startdate}} To {{cart_adv.enddate}}</td>
+                <td class="price">{{cart_adv.price}} Rs.</td>
+            </tr>
+        </table>
+        {% endfor %}
+        <table>
+        <tr>
+            <td colspan="7" style="text-align:right;">______</td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align:right;padding-right:70px;"><h3>Total</h3></td>
+            <td><input id="id_totalPrice" type="number" readonly style="border:none;outline:none;"></td>
+            <!--<td><button type="button" style="height:50px;width:200px;">Proceed to order</button></td>-->
+        </tr>
+        <tr>
+            <td colspan="8" style="text-align:right;"><button id="prcdBtn" type="submit">Buy</button></td>
+        </tr>
+    </table>
+</article>
+</html>

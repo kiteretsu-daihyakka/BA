@@ -1,0 +1,190 @@
+{% include 'signin/header.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<script src="{% static 'signin/js/signup.js' %}?{% now 'U' %}" rel="script"></script>
+<!-- Buyer Registration -->
+<div class="container">
+	<div style="margin-left:20px">
+	<input type="radio" class="type-buyer" onchange="hideB(this)" name="type" checked><span class="b-text"> Buyer</span>
+	<input type="radio" class="type-seller" onchange="hideA(this)" name="type"><span class="b-text"> Seller</span>
+	</div>
+	<form id="buyer" name="buyer" method="post" action="{% url 'signin:signup_buyer' %}" onsubmit="return buyervalidation()">
+		{% csrf_token %}
+	<div class="jumbotron">
+	<div class="f-name-se">
+	<label class="label-frm" for="f-name">First Name</label><input type="text" id="buyer_fname" title="Please Enter your First Name" name="f-name_reg_buyer" class="frm-text" placeholder=" First Name" size="30px">	  <span class="error_msg" id="buyerfn_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="l-name">Last Name</label><input type="text" id="buyer_lname" title="Please Enter your Last Name" name="l-name_reg_buyer" class="frm-text" placeholder=" Last Name" size="30px">	<span class="error_msg" id="buyerln_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="email">Email</label><input type="text" id="buyer_email" title="Please Enter Email" name="email_reg_buyer" class="frm-text" placeholder=" Email" size="30px">	<span class="error_msg" id="buyeremail_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="passwd">Password</label><input type="password" title="Please Enter your password" id="buyer_passwd" name="passwd_reg_buyer" class="frm-text" placeholder=" Password" size="30px">
+	<i class="fa fa-eye icon-style" aria-hidden="true" onclick="passhide()"></i>
+	<span class="error_msg" id="buyerpass_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="cnfpass">Confirm Password</label><input type="password" title="Re-Enter the password" id="buyer_cnfpasswd" name="cnfpass_buyer" class="frm-text" placeholder=" Confirm Password" size="30px">
+	<i class="fa fa-eye icon-style" aria-hidden="true" onclick="cnfpasshide()"></i>
+	<span class="error_msg" id="buyercnfpass_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="sec-q">Security Question</label>
+	<select class="drp-dwn" name="sec_que_buyer" id="buyer_secq">
+	<option value="Select">Select</option>
+	<option>Your first schoolname?</option>
+	<option>Your first pet's name?</option>
+	<option>Your pet name from friend?</option>
+	<option>First vehicle ever bought?</option>
+	<option>First mobile ever bought?</option>
+	</select>	<span class="error_msg" id="buyerseq_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="cnfpass">Security Answer</label><input type="text" id="buyer_secans" title="Enter secuity answer" name="sec_ans_buyer" class="frm-text" placeholder=" Security Answer" size="30px">	<span class="error_msg" id="buyersec_ans_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="city">City</label>
+		<select id="buyer_city" class="drp-dwn" name="city_buyer">
+		<option value="Select">Select</option>
+		{% for city in cities %}
+		<option>{{city.cityname}}</option>
+		{% endfor %}
+		</select>	
+		<span class="error_msg" id="buyercity_span"></span>
+	</div>
+	
+	<div class="f-name-sec">
+		<label class="label-frm" for="area">Area</label>
+		<select id="buyer_area" class="drp-dwn" name="area_buyer">
+		<option value="Select">Select</option>
+		{% for area in areas %}
+		<option value="{{area.id}}">{{area.areaname}}</option>
+		{% endfor %}
+		</select>	
+		<span class="error_msg" id="buyerarea_span"></span>
+		</div>
+
+
+	<div class="f-name-sec">
+	<label class="label-frm" for="mo-no">Mobile No.</label><input type="text" id="buyer_mob" title="Please Enter your Mobile-No" name="mo-no_buyer" class="frm-text" placeholder=" Mobile No" size="30px">	<span class="error_msg" id="buyermo_span"></span>
+	</div>
+	<div class="f-name-sec sign-btn">
+	<button type="button" class="btn btn-lg sign_btn" style="background-color:red;">Cancel</button>
+	<button type="submit" class="btn btn-lg sign_btn">SignUp</button> 
+	</div>
+	</div>
+	</form>
+	
+	<!-- Seller Registration -->
+	<form id="seller" name="seller" enctype="multipart/form-data" style="display:none;" method="post" action="{% url 'signin:signup_seller' %}" onsubmit="return sellervalidation()">
+		{% csrf_token %}
+	<div class="jumbotron">
+	<div class="f-name-se">
+	<label class="label-frm" for="f-name">First Name</label><input type="text" id="seller_fname" name="f-name_reg_seller" class="frm-text" placeholder=" First Name" size="30px">	<span class="error_msg" id="sellerfn_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="l-name">Last Name</label><input type="text" id="seller_lname" name="l-name_reg_seller" class="frm-text" placeholder=" Last Name" size="30px">	<span class="error_msg" id="sellerln_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="email">Email</label><input type="text" id="seller_email" name="email_reg_seller" class="frm-text" placeholder=" Email" size="30px">	<span class="error_msg" id="sellermail_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="passwd">Password</label><input type="password" id ="seller_passwd" name="passwd_reg_seller" class="frm-text" placeholder=" Password" size="30px">
+	<i class="fa fa-eye icon-style" aria-hidden="true" onclick="passhide_se()"></i>
+	<span class="error_msg" id="sellerpass_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="cnfpass">Confirm Password</label><input type="password" id="seller_cnfpasswd" name="cnfpass_seller" class="frm-text" placeholder=" Confirm Password" size="30px">
+	<i class="fa fa-eye icon-style" aria-hidden="true" onclick="cnfpasshide_se()"></i>
+	<span class="error_msg" id="sellercnfpass_span"></span>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="sec-q">Security Question</label>
+	<select id="seller_secq" class="drp-dwn" name="sec_que_seller">
+	<option value="Select">Select</option>
+	<option>Your first schoolname?</option>
+	<option>Your first pet's name?</option>
+	<option>Your pet name from friend?</option>
+	<option>First vehicle ever bought?</option>
+	<option>First mobile ever bought?</option>
+	</select>
+	<span class="error_msg" id="sellerseq_span"></span>
+	</div>
+	
+	<div class="f-name-sec">
+		<label class="label-frm" for="sec_ans">Security Answer</label><input type="text" id="seller_secans" title="Enter secuity answer" name="sec_ans_seller" class="frm-text" placeholder=" Security Answer" size="30px">	<span class="error_msg" id="sellersec_ans_span"></span>
+	</div>
+
+	<div class="f-name-sec">
+	<label class="label-frm" for="city">City</label>
+	<select id="seller_city" class="drp-dwn" name="city_seller">
+	<option value="Select">Select</option>
+	{% for city in cities %}
+	<option>{{city.cityname}}</option>
+	{% endfor %}
+	</select>
+	<span class="error_msg" id="sellercity_span"></span>
+	</div>
+	
+	<div id="seller_area" class="f-name-sec">
+		<label class="label-frm" for="area">Area</label>
+		<select class="drp-dwn" name="area_seller">
+		<option value="Select">Select</option>
+		{% for area in areas %}
+			<option value="{{area.id}}">{{area.areaname}}</option>
+		{% endfor %}
+		</select>
+		<span class="error_msg" id="sellerarea_span"></span>
+		</div>
+
+	<div class="f-name-sec">
+	<label class="label-frm" for="mo-no">Mobile No.</label><input type="text" id="seller_mob" name="mo-no_seller" class="frm-text" placeholder=" Mobile No" size="30px">	<span class="error_msg" id="sellermo_span"></span>
+	</div>
+	<!--div class="f-name-sec">
+	<label class="label-frm" for="u-name">User Name</label><input type="text" name="u-name" class="frm-text" placeholder=" User Name" size="30px">
+	</!--div-->
+	<div class="f-name-sec">
+	<label class="label-txtarea" id="seller_add" for="address">Address</label><div><textarea class="txtarea" name="address" rows="5" cols="32" placeholder="Address..."></textarea></div>
+	<span class="error_msg" id="selleradd_span"></span>
+	</div>
+	<div id="upldDocs" class="f-name-sec" hidden>
+	<label class="label-frm">Upload Documents</label>
+    <table cellspacing="0" cellpadding="10px">
+	{% for doc in docs%}
+		<tr style="border-bottom:1px solid black;height:50px;">
+            <td style="width:500px;">{{doc.docname}}</td>
+            <td><input type="file" name="{{doc.docname}}" ></td>
+        </tr>
+	{% endfor %}
+        <tr>
+            <td><button type="button" id="skipBtn">Skip For Now..</button></td>
+        </tr>
+    </table>
+	</div>
+	<!--div id="imgsHolder" style="">
+		<div class="imagesOfAdv" style="float:left;">
+		</div>
+		<div class="dilMangeMoreImg" title="Select image for advertisement" ><i class="fas fa-plus"></i><input id="tmpInputForImgRequired" style="opacity:0;width:0px;" type="number" value="" required></div>
+		<div id="imgInputContainer">
+			<input type="file" accept="image/*" class="imgInput" name="advImg1" hidden>
+		</div>
+		<br><br>
+	</div-->
+	<!--<div class="f-name-sec">-->
+		<!--<label class="label-frm" id="doc" for="doc"></label><input type="file" name="docfile" class="frm-text" size="30px"> -->
+	<!--</div>-->
+	<div class="f-name-sec sign-btn">
+	<button type="button" class="btn btn-lg sign_btn" style="background-color:red;">Cancel</button>
+    <button id="cntnuBtn" type="button" class="btn btn-lg btn-success">Continue</button>
+	<button id="sbmtBtn" type="submit" class="btn btn-lg sign_btn" hidden>SignUp</button>
+	</div>
+	</div>
+	</form>
+</div>
+
+{% endblock %}
+
+{% include 'signin/footer.html' %}

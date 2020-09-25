@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adv Detail</title>
+    {% load static %}
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'admm/mycss/univeral.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <style>
+        #advImages img{
+            height:150px;
+            width:150px;
+        }
+        h1{
+            color:darkblue;
+            font-size:25px;
+        }
+        #advDetail th{
+            text-align:left;
+        }
+        article{
+            font-size:17px;
+        }
+        fieldset{
+            width:300px;
+            border:none;
+
+        }
+        fieldset table{
+
+            padding-left:30px;
+        }
+        #advImages img{
+            height:100px;
+            width:130px;
+        }
+        table th{
+            padding-right:100px;
+        }
+        legend{
+            font-size:20px;
+            color:green;
+            font-weight:bold;
+        }
+        #advDetail{
+            width:300px;
+            height:300px;
+            margin-right:100px;
+        }
+    </style>
+</head>
+        {% include 'admm/header.html' %}
+        {% include 'admm/leftSideBar.html' %}
+<article style="">
+    <table>
+        <tr>
+            <td><a href="{% url 'admm:adv_edit' advObj.advid  %}"><i class="fa fa-edit"></i></a></td>
+            <td><a href="{% url 'admm:adv_del' advObj.advid %}"><i class="fa fa-trash"></i></a></td>
+        </tr>
+    </table>
+    <fieldset style="height:150px;">
+        <legend>Images</legend>
+        <table id="advImages">
+        <tr>
+            {% for advImgObj in advImgObjects %}
+                <td><img src="{{advImgObj.adv_img.url}}" alt="adv img"></td>
+            {% endfor%}
+        </tr>
+    </table>
+    </fieldset>
+    <fieldset style="float:left;height:300px;">
+        <legend>Details</legend>
+        <table id="advDetail">
+        {% if catid == 1  %}
+            <tr>
+                <th>Registration No.</th>
+                <td>{{advObj.advregno}}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <th>Height</th>
+            <td>{{advObj.height}}</td>
+        </tr>
+        <tr>
+            <th>Width</th>
+            <td>{{advObj.width}}</td>
+        </tr>
+        <!--<tr>-->
+            <!--<th>Max Days of booking</th>-->
+            <!--<td>{{advObj.maxdays}}</td>-->
+        <!--</tr>-->
+
+        {% if catid == 1  %}
+            <tr>
+                <th>Address</th>
+                <td>{{advObj.addressline1}}</td>
+            </tr>
+            <tr>
+                <th>Area</th>
+                <td>{{advObj.area_areaid}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <th>City</th>
+                <td>{{advObj.city_cityid}}</td>
+            </tr>
+            <tr>
+                <th>Minimum order limit</th>
+                <td>{{advObj.minquantity}}</td>
+            </tr>
+            <tr>
+                <th>Stock</th>
+                <td>{{advObj.stock}}</td>
+            </tr>
+        {% endif %}
+
+        <tr>
+            <th>Subcategory</th>
+            <td>{{advObj.subcategory_subcatid}}</td>
+        </tr>
+        <tr>
+            <th>Seller </th>
+            <td>{{advObj.auth_user}}</td>
+        </tr>
+
+    </table>
+    </fieldset>
+    <fieldset style="">
+        <legend>Pricing</legend>
+        <table style="text-align:center;">
+        <tr>
+            <th colspan="2"></th>
+        </tr>
+        <tr>
+            <th>Days</th>
+            <th>Price</th>
+        </tr>
+        {% for priceObj in priceObjects %}
+            <tr>
+                    <td>{{priceObj.noofdays}}</td>
+                    <td>{{priceObj.price}}</td>
+            </tr>
+        {% endfor%}
+    </table>
+    </fieldset>
+</article>
+</html>

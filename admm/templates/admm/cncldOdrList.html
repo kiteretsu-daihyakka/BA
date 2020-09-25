@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancelled Orders</title>
+    <style>
+        h1{
+            color:darkblue;
+        }
+        .ordrsLstTblRow td{
+            padding-top:20px;
+        }
+        .bgColor{
+            background-color:lightgray;
+        }
+    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+    <link href="{% static 'admm/mycss/index.css' %}" type='text/css' rel="stylesheet" />
+    <link href="{% static 'admm/mycss/universal.css' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_demandedPDF').val(0);
+            $('#fltrBtn').click(function(){
+                $('.fltrTd').toggle('fast');
+                $('.fltrTbl').toggleClass('bgColor');
+            });
+            $('#Not_rfnd').click(function(){
+                $('#id_flagRforN').val(0);
+                $('#sbmtBtnFlag').click();
+            });
+            $('#rfnd').click(function(){
+                $('#id_flagRforN').val(1);
+                $('#sbmtBtnFlag').click();
+            });
+        });
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <h1 style="width:100%;text-align:center;">Cancelled Orders</h1>
+        <table class="fltrTbl" style="width:100%;height:50px;">
+            <tr>
+                <td class="fltrTd" hidden></td>
+                <td class="fltrTd" hidden><a id="ordrLstLink" href="{% url 'admm:list_orders' %}" style="color:green;text-decoration:underline;">Go Back to Orders</a></td>
+                <td id="fltrBtn" style="text-align:right;cursor:pointer;"><span style="font-size:20px;">Filter</span> <i class="fas fa-filter"></i></td>
+            </tr>
+        </table>
+    <br><br>
+    <form id="rfndOrNtRfndFlag"  action=""  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="width:100%;text-align:right;">
+            <input type="number" value="0" name="demandedPDF" id="id_demandedPDF" hidden>
+            <button TYPE="button" style="border:none;background:transparent;color:green;" onclick="$('#id_demandedPDF').val(1);$('#rfndOrNtRfndFlag').submit();">Generate PDF</button>
+        </div>
+        <input id="id_flagRforN" name="flagRforN" type="number" value="{{flagRforNot}}" hidden>
+        <button id="sbmtBtnFlag" type="submit" hidden>Send</button>
+    </form>
+    <table style="width:100%;text-align:center;">
+        <tr>
+            <td id="Not_rfnd" style="width:50%;height:50px;border:1px solid black;cursor:pointer;{% if flagRforNot is 0 %}background-color:lightgray;{% endif %}">Not Refunded</td>
+            <td id="rfnd" style="border:1px solid black;cursor:pointer;{% if flagRforNot is 1 %}background-color:lightgray;{% endif %}">Refunded</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table id="ordrsLstTbl" style="width:100%;text-align:center;">
+        <tr>
+            <th>Order Id</th>
+            <th>Cancel. Advertisements</th>
+            <th>Cancel. Date&Time</th>
+            <th>Reason for cancl.</th>
+            <th>Refund Date&Time</th>
+            <th>Refund</th>
+        </tr>
+        {% for ordr in Objects %}
+            <tr class="ordrsLstTblRow">
+                <td><a href="{% url 'admm:ordr_detail' ordr.id %}">{{ordr.id}}</a></td>
+                <td><a href="{% url 'admm:adv_detail' ordr.advertisement_advid %}">{{ordr.advertisement_advid}}</a></td>
+                <td>{{ordr.cancellationdatetime}}</td>
+                <td>{{ordr.reasonofcancellation}}</td>
+                {% if flagRforNot is 0 %}
+                    <td colspan="2">
+                        <form id="" action="{% url 'admm:save_rfnd' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="number" name="refndAmnt" required>
+                            <input type="number" hidden value="{{ordr.advertisement_advid}}" name="advId">
+                            <input type="number" hidden value="{{ordr.id}}" name="odrId">
+                            <button type="submit">Submit</button>
+                        </form>
+                    </td>
+                {% else %}
+                <td>{{ordr.paymentdatetime}}</td>
+                <td>{{ordr.refundedamount}}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+</article>
+</html>

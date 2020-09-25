@@ -1,0 +1,88 @@
+{% load static %}
+<script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+<title>Edit Package</title>
+
+<script src="{% static 'admm/javaScript/package_form.js' %}"></script>
+<script>
+    var fetch_advs="{% url 'admm:fetch_advs' %}";
+</script>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<link href="{% static 'admm/mycss/package_form.css' %}" type="text/css" rel="stylesheet"/>
+<article>
+    <h1>Edit Package Detail</h1>
+    <form id="packUpdtform" action="" method='post' enctype='multipart/form-data'>
+    {% csrf_token %}
+    {% include 'admm/form-template.html' %}
+    <br>
+    <h1>Packed Advertisements</h1>
+    <div style="width:100%;text-align:right;"><a id="addAdvLnk"  style="padding-bottom:15px;;text-decoration:underline;color:green;">Add New</a></div>
+    <table class="packDtlTbl" cellspacing="0" cellpadding="5px">
+        <tr>
+            <th>Select</th>
+            <th></th>
+            <th>Image</th>
+            <th>Height</th>
+            <th>Width</th>
+            <th>Registration No.</th>
+            <th style="width:120px;">Address</th>
+            <!--<th style="width:80px;">Max Days of booking</th>-->
+            <th>Subcategory</th>
+            <th>Area</th>
+            <th>City</th>
+            <th style="">Minimum quantity</th>
+            <th>Owner</th>
+            <th>Stock</th>
+            <th>Package quantity</th>
+            <th></th>
+        </tr>
+        {% for pack_dtl in packDtls %}
+        <tr>
+                <td><input type="checkbox" checked value="{{pack_dtl.advertisement_advid.advid}}"></td>
+                <td style="width:25px;"><a href="{% url 'admm:adv_detail' pack_dtl.advertisement_advid.advid %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                <td><img src="/media/{{pack_dtl.advertisement_advid.defaultimgpath}}" height="70px" width="80px;" alt="advImg"></td>
+                <td>{{pack_dtl.advertisement_advid.height}}</td>
+                <td>{{pack_dtl.advertisement_advid.width}}</td>
+                <td>{%if pack_dtl.advertisement_advid.advregno is None %}-{%else%}{{pack_dtl.advertisement_advid.advregno}}{%endif%}</td>
+                <td style="text-align:left;width:160px;">{%if pack_dtl.advertisement_advid.addressline1 is None %}-{%else%}{{pack_dtl.advertisement_advid.addressline1}}{%endif%}</td>
+                <!--<td>{{adv.maxdays}}</td>-->
+                <td style="font-weight:bold;">{{pack_dtl.advertisement_advid.subcategory_subcatid}}</td>
+                <td>{%if pack_dtl.advertisement_advid.area_areaid is None %}-{%else%}{{pack_dtl.advertisement_advid.area_areaid}}{%endif%}</td>
+                <td>{%if pack_dtl.advertisement_advid.city_cityid is None %}-{%else%}{{pack_dtl.advertisement_advid.city_cityid}}{%endif%}</td>
+                <td>{%if pack_dtl.advertisement_advid.minquantity is None %}-{%else%}{{pack_dtl.advertisement_advid.minquantity}}{%endif%}</td>
+                <td>{{pack_dtl.advertisement_advid.auth_user}}</td>
+                <td>{%if pack_dtl.advertisement_advid.stock is None %}-{%else%}{{pack_dtl.advertisement_advid.stock}}{%endif%}</td>
+                <td>
+                    {% if pack_dtl.advertisement_advid.subcategory_subcatid.catid.id is 2 %}
+                    <input class="quantityAlrdy" style="width:50px;" name="quant{{pack_dtl.advertisement_advid.advid}}" type="number" value="{{pack_dtl.quantity}}" min="{{pack_dtl.advertisement_advid.minquantity}}" max="{{pack_dtl.advertisement_advid.stock}}" required>
+                    {%else%}
+                    -
+                    {% endif %}
+                </td>
+                <!-- <td style="width:25px;"><a onclick="saveIdDelInput(this)" id="advId{{pack_dtl.advertisement_advid.advid}}"><i class="fa fa-trash"></i></a></td> -->
+                <td class="advIdTd" hidden><input class="adv_id_input" type="number" value="{{pack_dtl.advertisement_advid.advid}}"></td>
+                <!--<td><input type="number" id="id_checkedAdvQn" name="checkedAdvQn" hidden></td>-->
+            </tr>
+        {% endfor %}
+    </table>
+    <!-- <input type="text" id="dltdAdvIds" name="deletedAdvs" value="" hidden> -->
+    <!-- <input type="number" id="deletedAdvsCnt" value="0" hidden> -->
+    <!-- <input type="number" id="alreadyAdvs" value="{{packDtls.count}}" hidden> -->
+    <input type="text" id="alreadyAdvsIds" value="" hidden>
+
+    <input type="text" id="id_adv_list" name="adv_list" value="" hidden>
+    <!-- <input type="text" id="id_changedAdvQnts" name="changedAdvQnts" value="" hidden> -->
+    <button type='submit' class='sbmtBtn'>Update</button>
+    <!--<button id="checkTmpAdv" type='button'>check</button>-->
+    
+    <br>
+    <br>
+    <h1 id="advListHeading" hidden>Select Advertisements to be added</h1>
+    
+    <table id="advListTbl" width="100%"  cellspacing="0" cellpadding="5px">
+
+    </table>
+</form>
+    <br>
+    <br>
+</article>

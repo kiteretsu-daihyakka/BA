@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log out page</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+</head>
+{% include 'signin/header.html' %}
+
+    <!--<h2 style="width:100%;text-align:center;">Logout Page</h2>-->
+    <div style="width:100%;text-align:center;font-size:larger;border:1px solid black;">
+        <p>You are already logged in!</p><br>
+        <a href="{% url 'login:logout' %}" style="color:green;">Click here to log out..</a>
+    </div>
+
+{% include 'signin/footer.html' %}
+</html>

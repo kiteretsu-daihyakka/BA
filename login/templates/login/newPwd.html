@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create new password</title>
+    {% load static %}
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#sbmtBtn').click(function(){
+                if($('#pswd').val() == $('#pswd2').val()){
+                    return true;
+                }
+                else{
+                    $('#failMsg').show();
+                    return false;
+
+                }
+            });
+        });
+    </script>
+    <style>
+        /* form{
+
+        } */
+        .newPwdForm input{
+            width:300px;
+            height:30px;
+        }
+        .newPwdForm button{
+            margin-top:15px;
+        }
+        .newPwdForm .submitBtn{
+            height:45px;
+            width:230px;
+            background-color:#32CD32;
+            font-size:medium;
+            border:none;
+            cursor:pointer;
+            font-weight:normal;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+            margin-right:20px;
+        }
+        .newPwdForm table td{
+            border:0px solid black;
+        }
+        .newPwdForm table{
+            border-collapse:separate;
+            border-spacing:0 15px;
+            border:0px solid black;
+        }
+    </style>
+    
+</head>
+{% if frmSignin == True %}
+    {% include 'signin/header.html' %}
+{% else %}
+    {% include 'admm/header.html' %}
+    {% include 'admm/leftSideBar.html' %}
+{% endif %}
+<article>
+        <span style="font-size: 30px;">Enter New Password</span>
+        <hr>
+        <form class="newPwdForm" action="{% url 'login:savenewpwd' %}" method="post" style="width:100%;padding-top: 50px;">
+            {% csrf_token %}
+            <table style="margin-left:auto;margin-right:auto;">
+                <tr>
+                    <td><label>New Password</label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="password" name="passwd" id="pswd" minlength="8">
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Confirm New Password</label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="password" name="passwd2" id="pswd2" minlength="8">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;"><input  type="submit" class="submitBtn" id="sbmtBtn" value="Change Password"></td>
+                </tr>
+            </table>
+        </form>
+        <!--this panel will be hidden until successful attempt-->
+        <div style="text-align:center;">
+            <br>
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+            <p id="failMsg" style="color:red;" hidden>Password & Confirm Password are not matching.</p>
+            <!--<a href="/adminsite/">Home</a>-->
+        </div>
+</article>
+</html>

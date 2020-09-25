@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Coupon List Or Add</title>
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/adminJquery.js' %}" rel="script"></script>
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <style>
+        #newCpnFrm th{
+            text-align:left;
+        }
+        #newCpnFrm{
+            margin-bottom:100px;
+        }
+        #newCpnFrm textarea{
+            height:60px;
+        }
+        #cpnTbl th{
+            background-color:lightgreen;
+            text-transform:uppercase;
+            border-bottom:1px solid black;
+        }
+        #cpnTbl tr{
+            height:50px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('#newCpnLink').click(function(){
+                $('#newCpnFrm').slideToggle();
+            });
+            $('#activeCpns').click(function(){
+                $('#id_activeOnes').val(1);
+                $('#sbmtBtnActvOnes').click();
+            });
+            $('#usedORexpired').click(function(){
+                $('#id_activeOnes').val(0);
+                $('#sbmtBtnActvOnes').click();
+            });
+            $('#rndStr').click(function(){
+                code=Math.random().toString(36).slice(2);
+                $('#id_cpnCode').val(code);
+            });
+            $('.cpnDelLinks').click(function(){
+                flag=confirm('Are you sure you want to delete it?');
+                if(flag==true){
+                    var cpn_id=$(this).attr('id').match(/(\d+)/)[0];
+                    $.ajax({
+                        url:"{% url 'admm:cpn_del' %}",
+                        data:{
+                            'cpnId':cpn_id,
+                        },
+                        success: function (data){
+                            if (data.result==1){
+                                slctr='cpnRowId'+cpn_id;
+                                $('#'+slctr).remove();
+                                alert('Deleted successfully.');
+                            }
+                            else{
+                                alert("Coupon Couldn't be Deleted, as its used in other placed.");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <h2>COUPONS</h2>
+    <div style="direction:rtl;margin:20px;">
+        <span id="newCpnLink" style="color:green;text-decoration:underline;cursor:pointer;">Add New</span>
+    </div>
+    <form hidden action=""  method="GET" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input id="id_activeOnes" name="actvOnes" type="number" value="0">
+        <button id="sbmtBtnActvOnes" type="submit">Send</button>
+    </form>
+    <form action="" id="newCpnFrm" method="post" enctype="multipart/form-data" hidden>
+        {% csrf_token %}
+        <table style="margin-top:50px;">
+            <tr>
+                <th colspan="2"><h3 style="color:green;">Create New Coupon</h3></th>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td><input name="cpnCode" id="id_cpnCode" type="text" required> <a id="rndStr" style="text-decoration:underline;color:green;">Generate Code</a></td>
+            </tr>
+            {{cpn_form.as_table}}
+            <tr>
+                <th>Buyer:</th>
+                <td>
+                    <select name="byrId" required>
+                        <option value="">-----------</option>
+                        {% for byr in buyers %}
+                        <option value="{{byr.id}}">{{byr}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <!--<tr>-->
+                <!--<td>Code:</td><td><input type="text" name="code" required></td>-->
+                <!--<td>Description:</td><td><input type="text" name="desc" required></td>-->
+                <!--<td>Start date:</td><td><input type="date" name="sdate" required></td>-->
+                <!--<td>End date:</td><td><input type="date" name="edate" required></td>-->
+                <!--<td>Discount:</td><td><input type="number" name="discount" required style="width:40px;" ></td>-->
+                <!--<td>MinCartVal:</td><td><input type="number" name="minval" required></td>-->
+                <!--<td>Buyer:</td><td><select required name="usr">-->
+                            <!--<option value=None>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+                        <!--&#45;&#45;for usrObj in usrObjects&#45;&#45;}-->
+                            <!--<option value=&#45;&#45;usrObj.id&#45;&#45; >&#45;&#45;usrObj&#45;&#45;</option>-->
+                        <!--&#45;&#45; endfor &#45;&#45;-->
+                    <!--</select></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td><button type="submit">Save</button></td>-->
+            <!--</tr>-->
+        </table>
+        <br>
+         <button  type="submit">Save Coupon</button>
+    </form>
+    <table style="width:100%;text-align:center;border-bottom:1px solid black;" cellspacing="0">
+        <tr>
+            <td id="activeCpns" style="width:50%;height:50px;font-weight:bold;border-right:1px solid black;cursor:pointer;{% if flag is 1 %}background-color:lightgray;{% endif %}">Active</td>
+            <td id="usedORexpired" style="cursor:pointer;font-weight:bold;{% if flag is 0 %}background-color:lightgray;{% endif %}">Used/Expired</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table id="cpnTbl" width="100%" cellspacing="0">
+        <tr style="background-color:lightgray;">
+            <th>Code</th>
+            <th style="width:250px;">Description</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Discount</th>
+            <th>Minimum cart value</th>
+            <th>Buyer</th>
+            {% if flag is 1 %}
+            <th></th>
+            {%endif%}
+            <th></th>
+        </tr>
+        {% for cpn in lst %}
+            <tr id="cpnRowId{{cpn.id}}" style="text-align:center;{% if forloop.counter == 1 %}padding-top:20px;{%endif%}{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+                <td>{{cpn.couponcode}}</td>
+                <td>{{cpn.coupondescription}}</td>
+                <td>{{cpn.couponstartdate}}</td>
+                <td>{{cpn.couponenddate}} </td>
+                <td>{{cpn.coupondiscount}}</td>
+                <td>{{cpn.mincartvalue}}  </td>
+                <td>{{cpn.auth_user}}</td>
+                {% if flag is 1 %}
+                <td style="width:25px;" ><a id="editLink" href="{% url 'admm:cpn_edit' cpn.id %}"><i class="fa fa-edit"></i></a></td>
+                {%endif%}
+                <td style="width:25px;" ><a class="cpnDelLinks" id="delLink{{cpn.id}}"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br><br><br>
+<!--<button type="button" id="newCpnBtn" style="width:200px;height:30px">Show/Hide</button><br><br>-->
+
+</article>
+</html>

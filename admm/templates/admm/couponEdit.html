@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Coupon</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <h2>Edit Coupon Detail</h2>
+    <form action='' method='post' enctype='multipart/form-data' >
+        {% csrf_token %}
+        {% include 'admm/form-template.html' %}
+        <br>
+        <button type='submit' id='subBtn'>Submit</button>
+        <!--<button type='reset' id='resBtn'>Cancel</button>-->
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+</article>
+</html>

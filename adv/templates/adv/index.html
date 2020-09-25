@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>Adv Page</title>
+        {% load staticfiles %}
+        <link href="{% static 'music/adv/css/bootstrap.min.css' %}" type='text/css' rel='stylesheet' />
+        <link href="{% static 'music/adv/style.css' %}" type='text/css' rel='stylesheet' />
+        <script type="text/javascript" src="{% static 'music/adv/jquery-3.3.1.min.js'%}"> </script>
+        <script src="{% static 'music/adv/myJquery.js'%}"> </script>
+    </head>
+    <body>
+        <div>
+        <table class="menuTbl">
+            <tr>
+                <td rowspan="2"><img class="logoTop" src="{% static 'music/images/logo.png'%}"/></td>
+                <td style="float:right;">Sign up/Log in</td>
+            </tr>
+            <tr>
+                <td class="menuBtn" style="direction:rtl">&#61;</td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Book Advertisement</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Categories</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>About us</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Contact us</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Help</span></td>
+            </tr>
+        </table>
+            <p class="alert-secondary">What is light pole?<span style="float: right;">&times;</span></p>
+            <p class="lightPole">
+                yeah it's ur job viraj..
+            </p>
+            <select>
+                City
+                <option>Select</option>
+                <option>Select</option>
+            </select>
+    </div>
+    </body>
+</html>

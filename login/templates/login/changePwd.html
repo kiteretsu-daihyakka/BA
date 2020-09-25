@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Change Password</title>
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+</head>
+{% if frmSignin == True %}
+    {% include 'signin/header.html' %}
+{% else %}
+    {% include 'admm/header.html' %}
+    {% include 'admm/leftSideBar.html' %}
+{% endif %}
+
+<!-- { block content } -->
+<article>
+    <span style="font-size: 30px;">Change Password</span>
+    <hr>
+    <form action="{% url 'login:check_old_pwd'%}" method="post" enctype="multipart/form-data" style="width:100%;padding-top:60px;">
+        {% csrf_token %}
+        <table style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td><label style="font-weight: bold;font-size: larger;">Enter Current Password</label><br></td>
+            </tr>
+            <tr>
+                <td><input type="password" name="passwrd" required style="width:300px;height:30px;"><br></td>
+            </tr>
+            <tr>
+                <td><button id="submitBtn" type="submit" style="height:40px;width:180px;background-color:#32CD32;font-size:medium;margin-top:15px;border:none;cursor:pointer;font-weight:bold;font-family:comic sans;box-shadow:3px 3px gray;">Submit</button></td>
+            </tr>
+            
+                <!-- <label>Security Question</label><br>
+                <input type="text" name="secque" required><br>
+                <label>Answer :</label><br>
+                <input type="text" name="secans" required><br>
+                <button>Send code</button><br><br>
+                <label> Enter Code</label>
+                <input type="text"><br> -->
+            
+        </table>
+    </form>
+    <br>
+    <div style="width:100%;color:red;padding-left:100px;">
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    </div>
+</article>
+<!-- { endblock } -->
+
+</html>

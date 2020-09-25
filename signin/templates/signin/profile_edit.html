@@ -1,0 +1,43 @@
+{% include 'signin/header.html' %}
+{% load staticfiles %}
+
+<div class="container" style="margin-top:70px;">
+	<div class="jumbotron">
+	<form id="buyer" name="buyer" method="post" action="">
+	<div class="f-name-se">
+	<label class="label-frm" for="f-name">First Name</label><input type="text" title="Please Enter your First Name" name="f-name" class="frm-text" placeholder=" First Name" size="30px" value="{{pro.first_name}}">
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="l-name">Last Name</label><input type="text" title="Please Enter your Last Name" name="l-name" class="frm-text" placeholder=" Last Name" size="30px" value="{{pro.last_name}}">
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="email">Email</label><input type="text" title="Please Enter Email" name="email" class="frm-text" placeholder=" Email" size="30px" value="{{pro.email}}">
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="mo">MobileNo</label><input type="text" title="Please Enter MobileNo" name="mobileno" class="frm-text" placeholder=" MobileNo" size="30px" value="{{pro.mobileno}}">
+	</div>
+	<div class="f-name-sec">
+	<label class="label-txtarea" for="address">Address</label><div><textarea class="txtarea" name="address" rows="5" cols="32" placeholder="Address...">{{pro.addressline1}}</textarea></div>
+	</div>
+	<div class="f-name-sec">
+	<label class="label-frm" for="sec-q">Area</label>
+	<select class="drp-dwn">
+	
+	{% for area in areas %}
+	{% if pro.area_areaid == area.areaid %}
+		<option selected value="">{{area.areaname}}</option>
+	{% else %}
+		<option value="{{area.areaid}}">{{area.areaname}}</option>
+	{% endif %}
+	{% endfor %}
+	</select>
+	</div>
+	<div class="f-name-sec sign-btn">
+	<button type="submit" id="savechng" class="btn btn-lg sign_btn">Save Changes</button>
+	<button type="button" class="btn btn-lg sign_btn" style="background-color:red;">Cancel</button> 
+	</div>
+	</form>
+</div>
+</div>
+
+{% include 'signin/footer.html' %}

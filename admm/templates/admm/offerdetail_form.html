@@ -1,0 +1,49 @@
+{% load static %}
+<script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+<title>Edit Package</title>
+<script>
+    $(document).ready(function(){
+        $('#id_enddate,#id_startdate').attr('type','date');
+    });
+</script>
+<script>
+    function validate(){
+        if($('#id_discount').val()<=0 || $('#id_discount').val()>100){
+            alert('Discount amount should be between 0 to 100');
+            return false;
+        }
+        if($('#id_enddate').val()<$('#id_startdate').val()){
+            alert('Startdate should be smaller than Enddate');
+            return false;
+        }
+    }
+</script>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<style>
+    .sbmtBtn{
+        border:none;
+        cursor:pointer;
+        font-weight:bold;
+        font-family:comic sans;
+        box-shadow:3px 3px gray;
+        height:40px;
+        width:180px;
+        background-color:#32CD32;
+        font-size:medium;
+        margin-top:20px;
+    }
+    #id_description{
+        height:50px;
+        width:300px;
+    }
+</style>
+
+<article>
+    <h1 style="">Edit Offer Detail</h1>
+    <form action='' method='post' enctype='multipart/form-data'>
+    {% csrf_token %}
+    {% include 'admm/form-template.html' %}
+    <button type='submit' class='sbmtBtn' onclick="return validate()">Update</button>
+    </form>
+</article>

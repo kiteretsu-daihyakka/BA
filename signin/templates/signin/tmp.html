@@ -1,0 +1,462 @@
+{% extends 'signin/header.html' %}
+
+{% block content %}
+
+{% endblock %}
+
+
+<div class="header-se">
+	<div class="logo-se">
+		<a href="/">
+			<img src="{% static 'signin/images/logo.jpg' %}" height="98px" width="150px"></img>
+		</a>
+	</div>
+	<div class="user" >
+		<button class="login-btn"  onclick="document.getElementById('id01').style.display='block'">Login/SignUp</button>
+	</div>
+	<div class="hd-elements">
+		<div class="se-city">
+		<label>   
+		<input type="text" id="city" list="city-op" placeholder=" Select city ">  
+		<datalist id="city-op">  
+		<option value="Gandhinagar">  
+		<option value="Mumbai">  
+		<option value="Delhi">   
+		<option value="Jaipur">    
+		</datalist>  
+		</label> 
+		</div>
+		<div class="search-se">
+		<i class="fa fa-search se" aria-hidden="true"></i>
+		</div>
+		<div class="cart-se">
+		<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+		<sup><span class="badge-ele">1</span></sup>
+		</div>
+		<div class="menu-se" onclick="openNav()">
+		<i class="fa fa-bars" aria-hidden="true"></i>
+		</div>
+	</div>
+	</div>
+	
+<!-- Search bar -->
+<div class="search-bar">
+	<input type="text" id="se-text" class="se-text" name="se-text" placeholder="search here...">
+	<i class="fa fa-arrow-circle-right send-ic" aria-hidden="true"></i>
+</div>
+
+
+
+<!-- login popup -->
+<div id="id01" class="modal-se">
+  <span onclick="document.getElementById('id01').style.display='none',refrech_page()" class="close" title="Close Modal" >&times;</span>
+  <form name="login_frm" method="post" class="modal_content" id="login_page"  action="login" onsubmit="return loginvalidation()">
+	{% csrf_token %}
+	<div class="login_container" >
+	  <h1>SignIn</h1>
+      <hr>
+      <label for="email"><b>Email</b></label><br/>
+	  <input type="text" id="login_email" name="email" class="text-css" placeholder="Enter Email"><br/>
+	  <!-- name="email" -->
+      <span class="error_msg" id="loginspan_email"></span><br/><br/>
+      <label for="psw"><b>Password</b></label><br/>
+	  <input type="password" id="login_pass" name="psw" class="text-css" placeholder="Enter Password" ><br/>
+	  <!-- name="psw" -->
+      <span class="error_msg" id="loginspan_pass"></span><br/><br/>
+	  <span class="error_msg" id="invalid_login">{{invalid_log}}</span><br/><br/>
+      <p class="message">Forget <a href="#" onclick="login_switch()" class="login_switch" >password?</a>.</p>
+	  <a href='signup'>Create new Account?</a>
+      <div class="clearfix">
+        <button class="btn-css" type="submit" class="signupbtn" >Sign Up</button>
+      </div>
+    </div>
+	
+  </form>
+  <form class="modal_content" id="forget-psw" style="display:none" action="" onsubmit="return rec_validation()">
+	<div class="forget-psw">
+	<h1>Password Recovery</h1>
+	<label for="email"><b>Email</b></label><br/>
+	<input type="text" class="text-css" placeholder="Enter Email" name="rec_email" id="rec_email">
+	<span class="error_msg" id="recspan_email"></span><br/><br/>
+	<button class="btn-css" type="submit" class="re-psw">Send password</button>
+	</div>
+  </form>
+</div>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div><img src="{% static 'signin/images/user.png' %}" class="user-img" height="50px" width="50px"></img></div>
+  <form method="post">
+	  {% csrf_token %}
+	  {% if user.is_authenticated %}
+	  <h1 style="margin-left:70px;font-size:20px">Hello {{user.first_name}}</h1>
+	  {% else %}
+	  <h1 style="margin-left:70px;font-size:20px">Hello User</h1>
+	  {% endif %}
+  <div class="m-list"><a href="">Home</a></div>
+  <div class="m-list"><a href="">About Us</a></div>
+  <div class="m-list drop-btn"><a href="#">Categories<i class="fa fa-caret-down"></i></a> 
+    
+  </div>
+  <div class="dropdwn-container">
+    <div class="m-list"><a href="#">Hording</a></div>
+    <div class="m-list"><a href="#">Rickshaw</a></div>
+    <div class="m-list"><a href="#">Bus-stand</a></div>
+  </div>
+  <div class="m-list"><a href="">Contact US</a></div>
+  <div class="m-list"><a href="">Help</a></div>
+   {% if user.is_authenticated %}
+  <div class="m-list"><a href="logout">Logout  <i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+   {% endif %}
+  </form>
+</div>
+
+<!-- Header -->
+<div class="header-se">
+	<div class="logo-se">
+		<a href='/'>
+			<img src="{% static 'signin/images/logo.jpg' %}" height="98px" width="150px"></img>
+		</a>
+	</div>
+	<div class="user" >
+		<button class="login-btn"  onclick="document.getElementById('id01').style.display='block'" >Login/SignUp</button>
+	</div>
+	<div class="hd-elements">
+		<div class="se-city">
+		<label>   
+		<input type="text" id="city" list="city-op" placeholder=" Select city ">  
+		<datalist id="city-op">  
+		<option value="Gandhinagar">  
+		<option value="Mumbai">  
+		<option value="Delhi">   
+		<option value="Jaipur">    
+		</datalist>  
+		</label> 
+		</div>
+		<div class="search-se">
+		<i class="fa fa-search se" aria-hidden="true"></i>
+		</div>
+		<div class="cart-se">
+		<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+		<sup><span class="badge-ele">1</span></sup>
+		</div>
+		<div class="menu-se" onclick="openNav()">
+		<i class="fa fa-bars" aria-hidden="true"></i>
+		</div>
+	</div>
+	</div>
+	
+<!-- Search bar -->
+<div class="search-bar">
+	<input type="text" id="se-text" class="se-text" name="se-text" placeholder="search here...">
+	<i class="fa fa-arrow-circle-right send-ic" aria-hidden="true"></i>
+</div>
+<!-- login popup -->
+<div id="id01" class="modal-se">
+	<span onclick="document.getElementById('id01').style.display='none',refrech_page()" class="close" title="Close Modal" >&times;</span>
+	<form name="login_frm" method="post" class="modal_content" id="login_page"  action="login" onsubmit="return loginvalidation()">
+	  {% csrf_token %}
+	  <div class="login_container" >
+		<h1>SignIn</h1>
+		<hr>
+		<label for="email"><b>Email</b></label><br/>
+		<input type="text" id="login_email" name="email" class="text-css" placeholder="Enter Email"><br/>
+		<!-- name="email" -->
+		<span class="error_msg" id="loginspan_email"></span><br/><br/>
+		<label for="psw"><b>Password</b></label><br/>
+		<input type="password" id="login_pass" name="psw" class="text-css" placeholder="Enter Password" ><br/>
+		<!-- name="psw" -->
+		<span class="error_msg" id="loginspan_pass"></span><br/><br/>
+  
+		<p class="message">Forget <a href="#" onclick="login_switch()" class="login_switch" >password?</a>.</p>
+		<a href='signup'>Create new Account?</a>
+		<div class="clearfix">
+		  <button class="btn-css" type="submit" class="signupbtn" >Sign Up</button>
+		</div>
+	  </div>
+	  
+	</form>
+	<form class="modal_content" id="forget-psw" style="display:none" action="" onsubmit="return rec_validation()">
+	  <div class="forget-psw">
+	  <h1>Password Recovery</h1>
+	  <label for="email"><b>Email</b></label><br/>
+	  <input type="text" class="text-css" placeholder="Enter Email" name="rec_email" id="rec_email">
+	  <span class="error_msg" id="recspan_email"></span><br/><br/>
+	  <button class="btn-css" type="submit" class="re-psw">Send password</button>
+	  </div>
+	</form>
+  </div>
+  <div id="mySidenav" class="sidenav">
+	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+	<div><img src="{% static 'signin/images/user.png' %}" class="user-img" height="50px" width="50px"></img></div>
+	<form method="post">
+		{% csrf_token %}
+		{% if user.is_authenticated %}
+		<h1 style="margin-left:70px;font-size:20px">Hello {{user.first_name}}</h1>
+		{% else %}
+		<h1 style="margin-left:70px;font-size:20px">Hello User</h1>
+		{% endif %}
+	<div class="m-list"><a href="">Home</a></div>
+	<div class="m-list"><a href="">About Us</a></div>
+	<div class="m-list drop-btn"><a href="#">Categories<i class="fa fa-caret-down"></i></a> 
+	  
+	</div>
+	<div class="dropdwn-container">
+	  <div class="m-list"><a href="#">Hording</a></div>
+	  <div class="m-list"><a href="#">Rickshaw</a></div>
+	  <div class="m-list"><a href="#">Bus-stand</a></div>
+	</div>
+	<div class="m-list"><a href="">Contact US</a></div>
+	<div class="m-list"><a href="">Help</a></div>
+	{% if user.is_authenticated %}
+	<div class="m-list"><a href="logout">Logout  <i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+	{% endif %}
+	</form>
+  </div>
+
+
+  <option>Select</option>
+  <option>Aadhar card</option>
+  <option>Election card</option>
+  <option>GST Certificate</option>
+  <option>Pan Card</option>
+
+
+  <!--======== 2 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+<!--======== 3 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+  
+  <!--======== 4 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <!--===== 5 ======-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <!--========= 6 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <!--========= 7 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <!--========= 8 ========-->
+  <div class="col-lg-3 col-md-6">
+	<div class="single-product">
+	  <div class="product-img">
+		<img
+		  height=230px
+		  width=50px
+		  class="card-img"
+		  src="{% static 'signin/images/h2.jpg' %}"
+		  alt=""
+		/>
+		<div class="p_icon">
+		  <a href="#">
+			<i class="fas fa-eye"></i>
+		  </a>
+		  <a href="#">
+			<i class="far fa-heart"></i>
+		  </a>
+		  <a href="#">
+			<i class="fas fa-shopping-cart"></i>
+		  </a>
+		</div>
+	  </div>
+	  <div class="product-btm">
+		<a href="#" class="d-block">
+		  <h4>Latest men’s sneaker</h4>
+		</a>
+		<div class="mt-3">
+		  <span class="mr-4">$25.00</span>
+		  <h6 class="loc"><i class="fas fa-map-marker-alt"></i>  NehruNagar</h6>
+		</div>
+	  </div>
+	</div>
+  </div>

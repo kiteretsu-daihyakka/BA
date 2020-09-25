@@ -1,0 +1,541 @@
+* {box-sizing: border-box;}
+body{
+	margin:0;
+	padding:0;
+	font-family: Arial, Helvetica, sans-serif;
+}
+/* header */
+.logo-se{
+	display:inline-block;
+	padding:0;
+	padding-bottom:0px;
+	margin:0;
+	
+}
+.header-se{
+	position:sticky;
+	top:0;
+	background-color:#00E676;
+	width:100%;
+	height:100px;
+	border-bottom:0;
+	z-index:1;
+}
+.user{
+	display:inline-block;
+	padding:0;
+	float: right;
+}
+.login-btn{
+	background-color:GreenYellow;
+	border:2px solid black;
+	outline:none;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size:15px;
+	padding:8px 10px;
+	font-weight:bold;
+	cursor:pointer;
+}
+
+.hd-elements{
+	display:inline;
+	background-color:yell;
+	float:right;
+	margin:60px 0px 0 0px;
+}
+.se-city{
+	display:inline;
+	margin:60px 10px;
+	height:30px;
+	
+}
+
+#city{
+	outline:none;
+	border:1px solid black;
+	font-size:15px;
+	background-color:Snow;
+	
+}
+.search-se{
+	display:inline;
+	font-size:20px;
+	margin-right:10px;
+	color:#fff;
+	cursor:pointer;
+}
+.cart-se{
+	display:inline;
+	font-size:20px;
+	margin-right:13px;
+	color:#fff;
+	cursor:pointer;
+}
+sup .badge-ele{
+	background-color:red;
+	color:#fff;
+	padding:0px 6px;
+	border-radius:50%;
+	
+}
+
+.menu-se{
+	
+	display:inline;
+	font-size:20px;
+	color:#fff;
+	cursor:pointer;
+	
+}
+/* for search bar */
+
+#se-text{
+	width: 50%;
+	padding: 12px 20px;
+	margin: 15px 0;
+	box-sizing: border-box;
+	border: 3px solid steelblue;
+	-webkit-transition: 0.5s;
+    transition: 0.5s;
+	outline: none;
+}
+.search-bar{
+	margin:0px 10px 0 400px;
+	display:none;
+	
+}
+.search-bar .send-ic{
+	font-size:25px;
+	padding:10px 10px;
+	cursor:pointer;
+}
+/* video */
+
+.video-se{
+	margin:7px 0 0 0;
+	
+}
+
+/* login popup */
+
+
+/* Full-width input fields */
+.text-css {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: 3px solid steelblue;
+  outline:none;
+ 
+}
+.error_msg{
+	color:red;
+}
+
+
+/* Set a style for all buttons */
+
+.btn-css{
+  background-color: SteelBlue;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.btn-css:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn {
+  float:left;
+  width: 100%;
+}
+
+/* Add padding to container elements */
+.login_container {
+  padding: 16px;
+}
+
+.forget-psw{
+  padding:16px;
+}
+
+/* The Modal (background) */
+.modal-se {
+  display:none;/* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 2; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #474e5d;
+  padding-top: 50px;
+}
+
+/* Modal Content/Box */
+.modal_content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  
+}
+
+/* Style the horizontal ruler */
+hr{
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+ 
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.close:hover,
+.close:focus {
+  color: SteelBlue;
+  cursor: pointer;
+}
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .signupbtn {
+     width: 100%;
+  }
+}
+
+/* Nevigation */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 100px;
+  right: 0;
+  background-color:RosyBrown; /*#111;*/
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  font-family:font-family: Arial, Helvetica, sans-serif;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 10px;
+  text-decoration: none;
+  display: block;
+  transition: 0.3s;
+}
+
+
+.closebtn{
+	font-size: 25px;
+	color: #818181;
+}
+.closebtn:hover{
+	color:steelblue;
+}
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.user-img{
+	margin-left:100px;
+	border-radius:50%;
+	background-color:SteelBlue;
+}
+.m-list a{
+	color:#fff;
+	margin:0px;
+}
+.m-list:hover{
+	background-color:SteelBlue;
+}
+.dropdwn-container {
+  background-color:RosyBrown;
+  display:none;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right:20px;
+}
+
+/* style for category box*/
+.tab{
+	margin:50px 0px 0px 30px;
+	width:96%;
+}
+.tab,tr.tab-row,td.cat-box{
+	border:2px solid black;
+	border-collapse:collapse;
+}
+.tab-row{
+	margin-left:80px;
+}
+.cat-box{
+	padding-left:200px;
+	height:50px;
+	width:400px;
+	background-color:red;
+	color:#fff;
+	font-weight:bold;
+}
+.cat-box:hover{
+	cursor:pointer;
+}
+a.cat{
+	color:#fff;
+	text-decoration:none;
+}
+
+
+/* For footer */
+
+
+/*=================footer css start==============*/
+footer{
+	margin-top:100px;
+}
+.webintern-footer {
+	background: #0d2034;
+}
+
+.webintern-footer-inner {
+	padding-top: 80px;
+	padding-bottom: 50px;
+}
+
+.webintern-footer-logo {
+	display: inline-block;
+}
+
+.webintern-footer .webintern-footer-inner .simple-text p {
+	color: #fff;
+	margin-top: 20px;
+	margin-bottom: 15px;
+}
+.simple-text p {
+	font-size: 15px;
+	color: #42435d;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	line-height: 26px;
+	margin-bottom: 0;
+}
+
+.webintern-footer .webintern-footer-inner .simple-text a {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 700;
+	color: #f2c21a;
+	font-size: 15px;
+}
+.footer-2 {
+	padding-left: 55px;
+}
+.webintern_footer_title {
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+.webintern_footer_title small {
+	font-family: 'Work Sans', sans-serif;
+	color: #fff;
+	font-weight: 700;
+	font-size: 18px;
+	text-transform: uppercase;
+}
+.webintern_footer_title:after {
+	content: '';
+	display: block;
+	width: 30px;
+	height: 2px;
+	background: #f2c21a;
+	margin-top: 15px;
+}
+.webintern-footer-list {
+	padding: 0;
+}
+.webintern-footer-list li {
+	margin-bottom: 17px;
+	list-style: none;
+}
+.webintern-footer-list a {
+	position: relative;
+	font-size: 15px;
+	line-height: 18px;
+	color: #fff;
+	padding-left: 0;
+	letter-spacing: 0.20px;
+	font-family: 'Open Sans', sans-serif;
+}
+.footer-3 {
+	padding-left: 65px;
+}
+.webintern-footer-inner .simple-text.last {
+	color: #d5d5d5;
+	font-size: 17px;
+	font-style: italic;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+}
+.tt-subscribe {
+	position: relative;
+}
+.tt-subscribe input:not([type="submit"]) {
+	width: 100%;
+	height: 46px;
+	background: #fff;
+	font-size: 15px;
+	color: #838486;
+	padding-left: 20px;
+	padding-right: 70px;
+	border: 2px solid #fff;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	outline:none;
+}
+.tt-subscribe-submit {
+	background: #001b57;
+}
+
+.tt-subscribe-submit {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 52px;
+	height: 46px;
+	font-size: 18px;
+	line-height: 46px;
+	color: #2a2a2a;
+	text-align: center;
+	background:#001b57;
+	-moz-border-radius-topright: 3px;
+	border-top-right-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	border-bottom-right-radius: 3px;
+	
+}
+
+
+.tt-subscribe-submit i.fa-envelope:before {
+	content: "\f0e0";
+	position: relative;
+	z-index: 1;
+	color: #fff;
+}
+.tt-subscribe-submit input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #51658d;
+	border: 0;
+	cursor:pointer;
+	outline:none;
+}
+ul.tt-socail {
+	padding: 0;
+	margin-top: 30px;
+}
+.tt-socail li {
+	display: inline-block;
+	margin-right: 10px;
+}
+.tt-socail a {
+	display: block;
+	width: 36px;
+	height: 36px;
+	font-size: 17px;
+	line-height: 34px;
+	color: #fff;
+	text-align: center;
+	border: 1px solid #fff;
+	-moz-border-radius: 100%;
+	border-radius: 100%;
+
+}
+
+.tt-socail .facebook:hover{
+	background-color:#3b5998;
+}
+.tt-socail .instagram:hover{
+	background-color:purple;#00aced
+}
+.tt-socail .twitter:hover{
+	background-color:#00aced;
+}
+.tt-socail .google-plus:hover{
+	background-color:red;
+}
+
+.webintern_footer_title small {
+    font-family: 'Work Sans', sans-serif;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.tt-copy
+{
+	font-size: 15px;
+	line-height: 20px;
+	color: #fff;
+	background: #51658d;
+	padding: 30px 0;
+	font-family: 'Open Sans', sans-serif;
+}
+.tt-copy-right {
+	text-align: right;
+}
+.logo{
+            height:50px;
+            margin-left:-6px;
+        }
+.dilMangeMoreImg{
+            border:1px solid black;
+            height:80px;
+            width:110px;
+            text-align:center;
+            vertical-align:middle;
+            line-height:80px;
+            cursor:pointer;
+            float:left;
+            margin-left:10px;
+}

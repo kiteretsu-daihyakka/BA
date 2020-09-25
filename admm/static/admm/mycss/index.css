@@ -1,0 +1,66 @@
+/* index .html */
+
+        #tableContents div{
+            float:left;
+            padding-bottom:30px;
+        }
+        #tableContents{
+            width:800px;
+            text-align:justified;
+        }
+        .secondaryInfo td{
+            padding-top:20px;
+            padding-right:80px;
+        }
+        .secondaryInfo{
+            margin-bottom:30px;
+
+        }
+        .manageTbl {
+
+            margin-top:30px;
+            border-collapse:separate;
+            border-spacing:5px;
+        }
+        .manageTbl a{
+            text-decoration:none;
+            font-size:18px;
+        }
+        .manageTbl a:hover{
+            color:green;
+        }
+        .manageTbl td{
+            text-align:center;
+            height:80px;
+            width:130px;
+            border:1px solid black;
+            padding:20px;
+            padding-right:150px;
+        }
+        .manageTbl tr{
+            /*border-space:20px;*/
+        }
+        .pipeLine : hover{
+            color:green;
+        }
+        .pipeLine{
+                /*border:1px solid black;*/
+
+                margin-left:3px;
+                cursor:pointer;
+            }
+        .pipeLine:hover{
+            text-decoration:underline;
+        }
+
+        /*couponListOrCreate.html*/
+        .cpnTbl{
+            width:100%;
+        }
+        .cpnTbl th{
+            text-align:left;
+        }
+        #newCpnFrm label{
+            margin-right:70px;
+        }
+

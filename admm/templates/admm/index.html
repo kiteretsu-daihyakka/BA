@@ -1,0 +1,147 @@
+
+    <head>
+    {% if user.is_staff %}
+        <title>Admin Panel</title>
+    {% else %}
+        <title>Boarding Alley</title>
+    {% endif %}
+    {% load static %}
+    <link rel="icon" href="{% static 'admm/logo/100_1720.JPG' %}" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<script src="https://kit.fontawesome.com/dc25b2d00b.js"></script>-->
+
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/adminJquery.js' %}" rel="script"></script>
+    <!--<script src="https://kit.fontawesome.com/dc25b2d00b.js"></script>-->
+    <!--{% load static %}-->
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+    <!--<link href="{% static 'admm/css/index.css' %}" type='text/css' rel="stylesheet" />-->
+    <!--<script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>-->
+    </head>
+
+    {% include 'admm/header.html' %}
+<!--{% for message in messages %}-->
+<!--<p>{{message}}</p>-->
+<!--{% endfor %}-->
+<!--<p>{{user.first_name}}</p>-->
+
+<!--<div style="position:fixed;top:100px;">-->
+    <!--<span  class="pipeLine" >{{pipeHome}}</span> /-->
+<!--</div>-->
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <div>
+        <!--<table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td><td><i class="fas fa-plus"></i></td></tr></table>-->
+    <h1 STYLE="font-size:30px;color:green;MARGIN-RIGHT:110PX;">DASHBOARD</h1>
+    <table class="manageTbl">
+        <tr>
+            <td><a href="{% url 'admm:list_orders' %}"><h4>Orders</h4></a><br><br>Today: {{odrsTdy}}<br>This month: {{odrsThisMnth}}</td>
+            <td><a href="{% url 'admm:listadv' %}"><h4>Advertisements</h4></a><br>Total: {{advTtl}}<br>Company: {{advOwnd}}<br>Sellers: {{advSlrs}}</td>
+            <td><a href="{% url 'admm:packOrOffr_list' 'package' %}"><h4>Packages</h4></a><br><br>Total: {{packCnt}}<br></td>
+        </tr>
+        <tr>
+            <!--<td><a href="{% url 'admm:list' 'Commissiondetail' %}">Commission</a></td>-->
+
+            <td><a href="{% url 'admm:packOrOffr_list' 'offer' %}"><h4>Offers</h4></a><br><br>Total: {{offrCnt}}<br> </td>
+            <td><a href="{% url 'admm:couponsListOrAdd' %}"><h4>Coupons</h4></a><br>Total: {{cpnsTtl}}<br>Active: {{cpnsActv}}<br>Used/Expired: {{usedORexpired}}</td>
+            {% if user.is_staff %}
+            <td><a href="{% url 'admm:categorycreateorview' %}"><h4>Categories</h4></a><br><br>Total: {{catCnt}}<br>Subcategories: {{scatCnt}}</td>
+            {% endif %}
+            <!--<td><a href="{% url 'admm:list' 'Orderfeedback' %}">Feedbacks</a><table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td></tr></table></td>-->
+            <!--<td><a href="{% url 'admm:list' 'Complaintdetail' %}">Compalaints</a><table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td></tr></table></td>-->
+            <!--<td><a href="{% url 'admm:list' 9 %}">Admins</a><table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td><td><i class="fas fa-plus"></i></td></tr></table></td>-->
+            <!--<td><a href="{% url 'admm:list' 'User' %}">Sellers</a><table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td><td><i class="fas fa-plus"></i></td></tr></table></td>-->
+            <!--<td><a href="{% url 'admm:list' 'User' %}">Users</a><table class="nestedTable" style="margin-top: 60px;"><tr><td><i class="fas fa-eye"></i></td><td><i class="fas fa-plus"></i></td></tr></table></td>-->
+        </tr>
+        <!--<tr>-->
+            <!--<td><h3>More items..</h3></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td colspan="5">-->
+                <!--<div id="tableContents">-->
+                    <!--{% for mdlName in mdlLst %}-->
+                        <!--<div><a href="{% url 'admm:list' mdlName %}">{{mdlName}}</a>&nbsp;</div>-->
+                    <!--{%endfor%}-->
+                <!--</div>-->
+            <!--</td>-->
+        <!--</tr>-->
+        <!--<th style="border-bottom: 1px  solid #000;" colspan="3"><h3>Reports</h3></th>-->
+        <!--<tr>-->
+            <!--<td><a href="{% url 'admm:list' 'Order' %}">Sells</a></td>-->
+
+            <!--<td><a href="{% url 'admm:list' 'Cancellationofordadv' %}">Cancellations</a></td>-->
+            <!--<td><a href="{% url 'admm:list' 'Updationinorder' %}">Updations</a></td>-->
+        <!--</tr>-->
+    </table>
+    </div>
+    <br>
+    <br>
+        <div>
+        <table class="secondaryInfo" style="">
+            <tr>
+                <td>Total Buyers: {% if user.isstaff %}<a href="{% url 'admm:usersList' %}">{{buyers}}</a>{% else %}{{buyers}}{% endif %}</td>
+                {% if user.isstaff %}
+                <td>Total Sellers: <a href="{% url 'admm:usersList' %}">{{sellers}}</a></td>
+                <td colspan="2">Total Admins: <a href="{% url 'admm:usersList' %}">{{admins}}</a></td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Total orders till: <a href="{% url 'admm:list_orders' %}">{{odrsTtl}}</a></td>
+                {% if user.isstaff %}
+                <td>Total website visitors today: </td>
+                <td colspan="2">Total website visitors till date: </td>
+                {% endif %}
+            </tr>
+            {% if user.isstaff %}
+            <tr>
+                <td>Area: <a href="{% url 'admm:locationcreatorview' %}">{{areas}}</a></td>
+                <td>City: <a href="{% url 'admm:locationcreatorview' %}">{{cities}}</a></td>
+                <td>State: <a href="{% url 'admm:locationcreatorview' %}">{{states}}</a></td>
+                <td>Country: <a href="{% url 'admm:locationcreatorview' %}">{{countries}}</a></td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    {% if user.isstaff %}
+    <div style="margin-bottom:200px;">
+        <a href="{% url 'admm:selr_docs' %}" style="color:green;" onmouseover="$(this).css('text-decoration','underline');" onmouseout="$(this).css('text-decoration','none');">Seller Documents</a>
+    </div>
+    {% endif %}
+</article>
+<!--<footer >
+    <div style="float: left;">
+        <p class="tmp">Quick Links</p>
+        <ul style="list-style-type: none;">
+            <li>Home</li>
+            <li>About us</li>
+            <li>Our services</li>
+            <li>Our goals</li>
+            <li>Why us?</li>
+        </ul>
+    </div>
+    <div style="float: left;">
+    <p>&nbsp;</p>
+    <ul style="list-style-type: none">
+        <li>Help</li>
+        <li>My Account</li>
+        <li>User agreement</li>
+        <li>FAQs</li>
+    </ul>
+    </div>
+    <div style="float:left">
+        <p>Contact us</p>
+        <ul style="list-style-type: none">
+            <li>Call/WApp : 98765 43210</li>
+            <li>Phone : 079-2663 5253</li>
+            <li>Email : pratham.creations611@gmail.com</li>
+        </ul>
+    </div>
+    <div style="float:left">
+        <p>Locate us</p>
+        <ul style="list-style-type: none;">
+            <li><img src="{% static 'admm/images/location.jpg' %}" alt="mapLocation" class="locationMap"/></li>
+        </ul>
+    </div>
+</footer>-->

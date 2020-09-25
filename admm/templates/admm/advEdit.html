@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adv Detail</title>
+    {% load static %}
+    <style>
+        #advImages img{
+            height:110px;
+            width:130px;
+        }
+        h1{
+            color:darkblue;
+            font-size:25px;
+        }
+        #advDetail th{
+            text-align:left;
+        }
+        .dilMangeMoreImg{
+            border:1px solid black;
+            height:80px;
+            width:110px;
+            text-align:center;
+            vertical-align:middle;
+            line-height:80px;
+            cursor:pointer;
+            float:left;
+            margin-left:10px;
+        }
+        .imagesOfAdv{
+            float:left;
+        }
+        .remDWPicon{
+            width:50px;
+        }
+        .remDWPicon:hover{
+            color:green;
+        }
+    </style>
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'admm/mycss/univeral.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script>
+        $(document).ready(function(){
+            $('#addDePricInput').click(function(){
+                $('#dayPriceList').append("<tr onmouseover='showRmvIcn(this)' onmouseout='hideRmvIcn(this)' class='dwpRow'><td><input type='number' name='day"+($('.dwpRow').length+1).toString()+"' required></td><td><input type='number' name='price"+($('.dwpRow').length+1).toString()+"' required></td><td class='remDWPicon' style='text-align:left;' ><i class='fas fa-times' onclick='removeDayPrice(this)' hidden></i></td></tr>");
+            });
+            $('#sbmtCopyBtn').click(function(){
+                if($('#id_DWPcount').val($('.dwpRow').length)==0){
+                    alert('coming');
+                    return false;
+                }
+                $('form').submit();
+            });
+            $('.dilMangeMoreImg').click(function(){
+                $('.imgInput:last').click();
+            });
+            $('#dayPriceList').on('mouseover','.dwpRow',function(){
+                $(this).children().children('i').css('display','block');
+            });
+            $('#dayPriceList').on('mouseout','.dwpRow',function(){
+                $(this).children().children('i').css('display','none');
+            });
+            $('#imgInputContainer').on('change','.imgInput',function(){
+                // alert('changed');
+                if(this.files && this.files[0]){
+                    var reader=new FileReader();
+                    // alert('coming in if');
+                    reader.onload=function(e){
+                        // alert('onload');
+                        $('.imagesOfAdv').append("<img class='adv_image' src='"+e.target.result+"' alt='adv img' height='80px' width='110px' ><i class='fas fa-times' style='cursor:pointer;margin-left:-17px;opacity:80%;font-size:20px;background-color:white;' onclick='removeImg(this)'></i> ");
+                        $('#tmpInputForImgRequired').prop('required',false);
+                        var imgs=$('#tmpInputForImgRequired').val();
+                        if(imgs==''){
+                            imgs=0;
+                        }
+                        $('#tmpInputForImgRequired').val(++imgs);
+                        // alert($('#tmpInputForImgRequired').val());
+                        // alert($('#tmpInputForImgRequired').prop('required'));
+                    }
+                    <!--alert('readDAttaUrl');
+                    reader.readAsDataURL(this.files[0]);
+                    $('#imgInputContainer').append("<input class='imgInput' type='file' accept='images/*' name='advImg"+$('.imgInput').length+1+"' hidden>");
+                }
+                // $('.imagesOfAdv').append("<img src='"+$(this).val()+"' alt='adv img' height='100px' width='130px'>");
+            });
+            // $('#plsImgIcn').click(function(){
+            //     var cnt=parseInt($('#for_advImg_loopId').val())+1;
+            //     $('#imgsHolder').append("<input class='advImgUpld' type='file' accept='images/*' name='advimg"+ cnt.toString() +"'></input><br>");
+            //     $('#for_advImg_loopId').val(cnt);
+            // });
+            $('.delImg').click(function(){
+                $(this).next('img').hide();
+                document.getElementById('id_imgsList').value+='?'+$(this).next('img').attr('alt');
+                $(this).hide();
+            });
+            $('#categoryDD').change(function(){
+                var cat=$('#categoryDD option:selected').text();
+                if (cat==''){
+                    $('#subcategoryDD').empty();
+                    $('#subcategoryDD').append("<option value=''></option>");
+                    return;
+                }
+                if(cat=='Hoarding'){
+                    $('.hoardingFild').show();
+                    $('.rickFilds').hide();
+                    $('.rickFilds input,select').prop('required',false);
+                    $('.hoardingFild input,textarea,select').prop('required',true);
+                    $('#arDD').prop('required',true);
+                }
+                else if(cat=='Rickshaw'){
+                    $('.hoardingFild').hide();
+                    $('.hoardingFild input,textarea,select').prop('required',false);
+                    $('.rickFilds').show();
+                    $('.rickFilds input,select').prop('required',true);
+                    $('#arDD').prop('required',false);
+                }
+                $.ajax({
+                    url:"{% url 'admm:subCatsDD' %}",
+                    data:{
+                        'id':$(this).val(),
+                    },
+                    dataType:'json',
+                    success: function (data){
+                        console.log(data);
+                        $('#subcategoryDD').empty();
+                        $('#subcategoryDD').append("<option value='' ></option>");
+                        for(var i=0;i<data['subCats'].length;i++){
+                            //alert(obj['statename']);
+                            $('#subcategoryDD').append("<option value='"+data['subCats'][i]['id']+"' >"+data['subCats'][i]['subcatname']+"</option>");
+                        }
+                    }
+                });
+            });
+            // $('article').on('submit','form',function(){
+            //     
+            // });
+        });
+    </script>
+    <script>
+        function submitted(){
+            $('#id_DWPcount').val(parseInt($('.dwpRow').length));
+            if($('.adv_image').length==0){
+                alert('select at least one image');
+                return false;
+            }
+            return true;
+        }
+        function showRmvIcn(ele){
+            $(ele).children('.remDWPicon').children().show();
+        }
+        function hideRmvIcn(ele){
+            $(ele).children('.remDWPicon').children().hide();
+        }
+        function removeDayPrice(ele){
+            var last_dayprice_id=$('.dwpRow').length;
+            // alert(last_dayprice_id);
+            var selector='day_id'+last_dayprice_id.toString();
+            $(ele).parent().siblings('.dayInput').find('input').val($('#'+selector).val());
+            var selector='price_id'+last_dayprice_id.toString();
+            $(ele).parent().siblings('.priceInput').find('input').val($('#'+selector).val());
+            $('#'+selector).parent().parent().remove();
+        }
+        function removeImg(ele){
+            $(ele).prev().remove();
+            $(ele).remove();
+        }
+        function moveImgToList(ele){
+            $('#deletedAdvLst_id').val($('#deletedAdvLst_id').val()+$(ele).prev().attr('alt')+" ");
+            $(ele).prev().remove();
+            $(ele).remove();
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+
+    <h1 style="color:green;text-align:center;">Edit Advertisement Detail</h1>
+    <form action="{% url 'admm:adv_save' advObj.advid %}" method="post" enctype="multipart/form-data" onsubmit="return submitted()">
+        {% csrf_token %}
+
+    <table>
+        <tr>
+            <td><button class="successBtn" type="submit">Save Advertisement</button> </td>
+            <td><a href="{% url 'admm:adv_detail' advObj.advid %}"><button class="primaryBtn" type="button">Cancel</button></a></td>
+        </tr>
+    </table>
+    <table id="advImages">
+        <tr>
+            <th><h1>IMAGES</h1></th>
+        </tr>
+        <tr>
+            {% for advImgObj in advImgObjects %}
+                <!--<td><span class="delImg" style="font-size:20px;">&times;</span><img src="{{advImgObj.adv_img.url}}" alt="{{advImgObj.adv_img}}"></td>-->
+                <td><img  src="{{advImgObj.adv_img.url}}" alt="{{advImgObj.adv_img}}" class="adv_image"><i class='fas fa-times' style='cursor:pointer;margin-left:-17px;opacity:80%;font-size:20px;background-color:white;' onclick='moveImgToList(this)'></i></td>
+            {% endfor%}
+            <td>
+                <div id="imgsHolder" style="">
+                <div class="imagesOfAdv" style="float:left;">
+                </div>
+                <div class="dilMangeMoreImg" title="Select image for advertisement" ><i class="fas fa-plus"></i></div>
+                <div id="imgInputContainer">
+                    <input type="file" accept="image/*" class="imgInput" name="advImg1" hidden>
+                </div>
+                </div>
+            </td>
+        </tr>
+        <tr hidden><input id="deletedAdvLst_id" type="text" name="deletedAdvLst" hidden></tr>
+    </table>
+    <table id="advDetail">
+        <tr>
+            <th colspan="2"><h1>ADVERTISEMENT DETAIL</h1></th>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>
+                <select style="175px;" id="categoryDD" required >
+                    {% for cat in categories %}
+                        <option {% if cat.id == catid %}selected{%endif%} value="{{cat.id}}">{{cat.categoryname}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Subcategory</th>
+            <td>
+                <select id="subcategoryDD" name="subcategory" required>
+                    {% for subCat in subCatObjects %}
+                        {% if subCat.subcatname == advObj.subcategory_subcatid.subcatname %}
+                            <option value="{{subCat.id}}" selected>{{subCat.subcatname}}</option>
+                        {% else %}
+                            <option value="{{subCat.id}}">{{subCat.subcatname}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        {% if catid == 1  %}
+        <tr>
+            <th>Registration No.</th>
+            <td><input type="text" name="regno" value="{{advObj.advregno}}" required></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Height</th>
+            <td><input type="number" name="height" value="{{advObj.height}}" required></td>
+        </tr>
+        <tr>
+            <th>Width</th>
+            <td><input type="number" name="width" value="{{advObj.width}}" required></td>
+        </tr>
+        <!--<tr>-->
+            <!--<th>Max Days of booking</th>-->
+            <!--<td><input type="number" name="maxdays" value="{{advObj.maxdays}}" required></td>-->
+        <!--</tr>-->
+
+        {% if catid == 1  %}
+            <tr>
+                <th>Address</th>
+                <td>
+                    <input  name="address" value="{{advObj.addressline1}}" required>
+                </td>
+            </tr>
+            <tr>
+                <th>Area</th>
+                <td>
+                   <select name="area" required>
+                        {% for area in areaObjects %}
+                            {% if area.areaname == advObj.area_areaid.areaname %}
+                                <option value="{{area.id}}" selected>{{area.areaname}}</option>
+                            {% else %}
+                                <option value="{{area.id}}">{{area.areaname}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <th>City</th>
+                <td>
+                    <select name="city" required>
+                        {% for city in cityObjects %}
+                            {% if city.cityname == advObj.city_cityid.cityname %}
+                                <option value="{{city.id}}" selected>{{city.cityname}}</option>
+                            {% else %}
+                                <option value="{{city.id}}">{{city.cityname}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Minimum order limit</th>
+                <td><input type="number" name="min_qn" value={{advObj.minquantity}} required></td>
+            </tr>
+            <tr>
+                <th>Stock</th>
+                <td><input type="number" name="stock" value="{{advObj.stock}}" required></td>
+            </tr>
+        {% endif %}
+
+
+    </table>
+    <table id="dayPriceList" style="text-align:center;">
+        <tr>
+            <th colspan="2"><h1>PRICING INFO</h1></th>
+        </tr>
+        <tr>
+            <th>Days</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+        {% for priceObj in priceObjects %}
+            <tr class="dwpRow">
+                <td class="dayInput"><input id="day_id{{forloop.counter}}"  name="day{{forloop.counter}}" type="number"  value={{priceObj.noofdays}} required></td>
+                <td class="priceInput"><input id="price_id{{forloop.counter}}"  name="price{{forloop.counter}}" type="number" value={{priceObj.price}} required></td>
+                {% if forloop.counter > 1 %}
+                    <td class=".remDWPicon"  style="text-align:left;" ><i class="fas fa-times" onclick='removeDayPrice(this)' onmouseover="$(this).css('color','green');" onmouseout="$(this).css('color','black');"></i></td>
+                {% endif %}
+            </tr>
+            <!--funcIncreamentDWP()-->
+        {% endfor%}
+
+    </table>
+        <table>
+            <tr>
+            <td colspan="2" ><i class="fas fa-plus" id="addDePricInput"></i></td>
+        </tr>
+        </table>
+        <input type="number" id="id_DWPcount" name="DWPcount" hidden>
+    </form>
+</article>
+</html>

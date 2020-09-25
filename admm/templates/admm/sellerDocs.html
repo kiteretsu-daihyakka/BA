@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Documents</title>
+    <style>
+        #docTbl tr{
+            height:60px;
+        }
+        #docTbl{
+            width:100%;
+            text-align:center;
+        }
+    </style>
+    {% load static %}
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        function editDoc(ele){
+            $(ele).parent().siblings('.docDtl').find('input').show();
+            $(ele).parent().siblings('.docDtl').find('input').val($(ele).parent().siblings('.docDtl').find('.docName').html());
+            $(ele).parent().html("<button onclick='updateDocName(this)'>Update</button> <button onclick='hideUpdtCnclBtn(this)'>Cancel</button>");
+
+        }
+        function hideUpdtCnclBtn(ele){
+            <!--alert();-->
+            $(ele).parent().siblings('.docDtl').find('input').hide();
+            $(ele).parent().html("<i onclick='editDoc(this)' class='fas fa-edit'></i> <i class='fas fa-trash'></i>");
+        }
+        function updateDocName(ele){
+            var gonnaUpdt=$(ele).parent().siblings('.docDtl').find('input').val();
+            if(gonnaUpdt==$(ele).parent().siblings('.docDtl').find('.docName').html()){
+                alert('Please Enter different value than press update');
+                return;
+            }
+            if(gonnaUpdt==''){
+                alert('Please Enter value than press update');
+                return;
+            }
+            var flag=false;
+            $('.docName').each(function(){
+                if(gonnaUpdt==$(this).html())
+                {
+                    flag=true;
+                    return;
+                }
+            });
+            if(flag==true){
+                alert('Duplicate entry found - '+gonnaUpdt);
+                return;
+            }
+            <!--alert('ajax');-->
+            $.ajax({
+                url:'{% url 'admm:selr_doc_edit' %}',
+                data:{
+                    'id':parseInt($(ele).parent().siblings('.docDtl').find('.docId').html()),
+                    'docName':$(ele).parent().siblings('.docDtl').find('input').val(),
+                },
+                dataType:'json',
+                success: function (data){
+                    if(data.result==1){
+                        $(ele).parent().siblings('.docDtl').find('.docName').html(gonnaUpdt);
+                        alert('Document name updated successfully');
+                        $(ele).parent().siblings('.docDtl').find('input').hide();
+                        $(ele).parent().html("<i onclick='editDoc(this)' class='fas fa-edit'></i> <i class='fas fa-trash'></i>");
+                    }
+                    else{
+                        alert('Error in updating, please try again..');
+                    }
+                }
+            });
+        }
+        function delDoc(ele){
+            if(confirm('you pressed delete option!')){
+                $.ajax({
+                    url:'{% url 'admm:selr_doc_del' %}',
+                    data:{
+                        'id':parseInt($(ele).parent().siblings('.docDtl').find('.docId').html()),
+                    },
+                    dataType:'json',
+                    success:function (data){
+                        if(data.result==1){
+                            alert('Document deleted successfully');
+                            $(ele).parent().parent().remove();
+                        }
+                        else{
+                            alert('Error in deleting, please try again..');
+                         }
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <table id="docTbl" cellspacing="0">
+        <tr>
+            <td colspan="2"><h3 style="padding-bottom:30px;">Seller Documents List</h3></td>
+        </tr>
+        {% for obj in objects %}
+        <tr style="{%if objects.count > 3 %}{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}{%endif%}">
+            <td class="docDtl"><span class="docId" hidden>{{obj.docid}}</span><span class="docName">{{obj.docname}}</span> <br> <input type="text" value="" hidden></td>
+            <td><i onclick="editDoc(this)" class="fas fa-edit"></i> <i class="fas fa-trash" onclick="delDoc(this)"></i></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No Documents</td>
+        </tr>
+        {% endfor %}
+    </table>
+</article>
+</html>

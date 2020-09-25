@@ -1,0 +1,61 @@
+    {% if advObjs.count == 0 %}
+        <p>No advertisements</p>
+    {% else %}
+
+    <table class="advertisements" cellspacing="0" >
+        <tr id="headRow" onclick="titleFixing(this)">
+            <th class="advertisementsTh formFields" style="width:auto;" hidden>Select</th>
+            <th class="advertisementsTh" style="width:auto;">View</th>
+            <th class="advertisementsTh" style="padding:0;width:180px;">Image</th>
+            <th class="advertisementsTh" style="width:auto">Height</th>
+            <th class="advertisementsTh" style="width:auto">Width</th>
+            <th class="advertisementsTh" style="padding-top:20px;">Registration No.</th>
+            <th class="advertisementsTh" style="width:220px;">Address</th>
+            <!--<th style="width:80px;">Max Days of booking</th>-->
+            <th class="advertisementsTh">Subcategory</th>
+            <th class="advertisementsTh">Area</th>
+            <th class="advertisementsTh">City</th>
+            <th class="advertisementsTh" style="padding-top:20px;">Minimum quantity</th>
+            <th class="advertisementsTh">Stock</th>
+            <th class="advertisementsTh formFields" hidden>Package qauntity</th>
+            {% if user.is_staff == 1 %}
+            <th class="advertisementsTh">Owner</th>
+            {% endif %}
+            {% if OwnedOnes %}
+                <th class="advertisementsTh"></th>
+                <th class="advertisementsTh"></th>
+            {% endif %}
+        </tr>
+            {% for adv in advObjs %}
+            <tr style="{% if forloop.counter == 1 %}padding-top:20px;{%endif%}{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+                <td class="formFields" style="width:auto;" hidden><input type="checkbox" value="{{adv.advid}}" {% if adv.stock is 0 %}disabled title="Stock is 0, can not be selected." {%endif%}></td>
+                <td style="width:auto;"><a href="{% url 'admm:adv_detail' adv.advid %}"><i class="fa fa-eye"></i></a></td>
+                <td style="padding:0;"><img src="/media/{{adv.defaultimgpath}}" height="80px;" width="80px;" alt="advImg"></td>
+                <td style="width:auto">{{adv.height}}</td>
+                <td style="width:auto">{{adv.width}}</td>
+                <td>{%if adv.advregno is None %}-{%else%}{{adv.advregno}}{%endif%}</td>
+                <td style="width:220px;">{%if adv.addressline1 is None %}-{%else%}{{adv.addressline1}}{%endif%}</td>
+                <!--<td>{{adv.maxdays}}</td>-->
+                <td>{{adv.subcategory_subcatid}}</td>
+                <td>{%if adv.area_areaid is None %}-{%else%}{{adv.area_areaid}}{%endif%}</td>
+                <td>{%if adv.city_cityid is None %}-{%else%}{{adv.city_cityid}}{%endif%}</td>
+                <td>{%if adv.minquantity is None %}-{%else%}{{adv.minquantity}}{%endif%}</td>
+                <td>{%if adv.stock is None %}-{%else%}{{adv.stock}}{%endif%}</td>
+                <td class="formFields" hidden>
+                    {% if adv.subcategory_subcatid.catid.id == 2 %}
+                        <input type="number" style="width:60px;" id="advQntt{{adv.advid}}" name="selectedAdvQntt{{adv.advid}}" min="{{adv.minquantity}}" max="{{adv.stock}}">
+                    {% endif %}
+                </td>
+                {% if user.is_staff == 1 %}
+                <td>{{adv.auth_user}}</td>
+                {% endif %}
+                {% if OwnedOnes %}
+                    <td style="width:25px;" ><a id="editAdvLink" href="{% url 'admm:adv_edit' adv.advid %}" > <i class="fa fa-edit"></i></a></td>
+                    <td style="width:25px;" ><a id="delAdvLink"  href="{% url 'admm:adv_del' adv.advid %}" onclick="if(confirm('You pressed deleted! Sure to delete item')==false){return false}"><i class="fa fa-trash"></i></a></td>
+                {% endif %}
+                <!--<td><input type="number" id="id_checkedAdvQn" name="checkedAdvQn" hidden></td>-->
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+    {% endif %}

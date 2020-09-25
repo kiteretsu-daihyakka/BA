@@ -1,0 +1,27 @@
+user tables' competetion
+data entry label names readable
+linking forms
+
+
+designing
+
+
+#tmp storage for code
+<!--
+<div>
+{% load staticfiles %}
+<img src="{% static object.defaultimgpath %}" alt="adImg" height="400" width="500">
+<h1>{{object.advid}}</h1>
+<h2>{{object.advregno}}</h2>
+<h3>{{object.height}}&nbsp;{{adv.width}}</h3>
+<h4>{{object.maxdays}}</h4>
+<h5>{{object.minquantity}}</h5>
+<h5>{{object.addressline1}}</h5>
+<h5>{{object.area_areaid}}</h5>
+<h5>{{object.city_cityid}}</h5>
+<h5>{{object.stock}}</h5>
+<h5>{{object.subcategory_subcatid}}</h5>
+<h5>{{object.userdetail_userid}}</h5>
+<h5>{{object.area_areaid}}</h5>
+<h5>{{object.isowned}}</h5>
+</div>-->

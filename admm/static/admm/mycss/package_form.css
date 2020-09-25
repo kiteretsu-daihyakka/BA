@@ -1,0 +1,38 @@
+#advListTbl th{
+    border-bottom:1px solid black;
+    background-color:lightgreen;
+    text-align:center;
+    text-transform:uppercase;
+    font-size:smaller;
+}
+#advListTbl tr{
+    text-align:center;
+    height:60px;
+}
+.sbmtBtn{
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+    font-family:comic sans;
+    box-shadow:3px 3px gray;
+    height:40px;
+    width:180px;
+    background-color:#32CD32;
+    font-size:medium;
+    margin-top:20px;
+}
+#id_description{
+    height:50px;
+    width:300px;
+}
+
+.packDtlTbl{
+    text-align:center;
+}
+.packDtlTbl th{
+        background-color:lightgreen;
+        border-bottom:1px solid black;
+        text-transform:uppercase;
+        font-size:smaller;
+        height:60px;
+}

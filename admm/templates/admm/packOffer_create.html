@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create {{packOrOffr}}</title>
+    {% load static %}
+    <!--<link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />-->
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/javaScript/packOffrCreate.js' %}?{% now 'U' %}"></script>
+    <style>
+        .normalizingBar{
+            position:relative;
+        }
+        /*#packHeading,#offerHeading{
+            font-size:26px;
+        }*/
+        .titles{
+            width:100%;
+            height:50px;
+            border-bottom:1px solid black;
+            cursor:pointer;
+            text-align:center;
+        }
+        .advertisements{
+            text-align:center;
+        }
+        .advertisements tr{
+            height:80px;
+        }
+        /*.advertisements td{
+             border:1px solid black; 
+        }*/
+        .advQntt{
+            width: 70px;
+        }
+        .advertisementsTh{
+            background-color:lightgreen;
+            padding-right:10px;
+            margin-bottom:50px;
+            font-size:smaller;
+            text-transform:uppercase;
+            border-bottom:1px solid black;
+         }
+        #packOfferTbl{
+            width:100%;
+            direction:rtl;
+        }
+        #offrBtn,#packBtn{
+            /*border:1px solid black;*/
+            /*width:160px;*/
+            /*height:40px;*/
+            /*text-align:center;*/
+            cursor:pointer;
+        }
+        /* #offrBtn:hover{
+            background-color:#98c0fb;
+            text-decoration:underline;
+        }
+        #packBtn:hover{
+            background-color:#98FB98;
+            text-decoration:underline;
+        } */
+        /*#showChckBoxes:hover{
+            background-color:#98FB98;
+            text-decoration:underline;
+        }*/
+        #offrBtnInception,#packBtnInception,#showChckBoxes{
+            font-weight:bold;
+            cursor:pointer;
+            outline:none;
+            color:black;
+            border:none;
+            /*text-decoration:underline;*/
+
+        }
+        #changeLogText{
+            border:1px solid lightgray;
+            height:30px;
+            width:90%;
+            background-color:lightgreen;
+            line-height:30px;
+        }
+        #changeLogText .closeMsg{
+            float:right;
+            font-size:20px;
+            cursor:pointer;
+            margin-right:15px;
+        }
+        #packCreate label{
+            font-weight:bold;
+        }
+
+        /*.fixIt{
+            <!--position:fixed;-->
+            <!--top:0;-->
+            <!--margin-top:82px;-->
+            <!--color:red;-->
+            <!--background-color:yellow;-->
+        }*/
+    </style>
+    <script>
+        function submitFormOfPack(){
+            /*<!-- if($('#packHeading').is(":visible") && parseInt($('#id_selectedAdvCnt').val())<2){
+                alert('select at least 2 advertisement to create package');
+                return false;
+            }
+            if($('#offerHeading').is(":visible") && parseInt($('#id_selectedAdvCnt').val())<1){
+                alert('select at least 1 advertisement to create offer');
+                return false;
+            }*/
+            if($('#id_enddate').val()<$('#id_startdate').val()){
+                alert('End date must be greater than Start date!');
+                return false;
+            }
+            if($("input[type='checkbox']:checked").length==0){
+                alert('Please select at least one advertisement with the checkbox.');
+                return false;
+            }
+            $.each($("input[type='checkbox']:checked"),function(){
+                $('#id_selectedAdvs').val($('#id_selectedAdvs').val()+$(this).val()+',');
+            });
+        }
+        function titleFixing(ele){
+            var rect=ele.getBoundingClientRect();
+            alert(rect.x+' '+rect.y);
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+
+<article >
+    <!--<div class=".pipeLine">-->
+        <!--{{pipeAdv}}-->
+    <!--</div>-->
+    {% for message in messages %}
+        <p id="changeLogText" onmouseout="$('.closeMsg').hide();" onmouseover="$('.closeMsg').show();"><span class="logTxt">{{message}}</span> <span class="closeMsg" onclick="$('#changeLogText').hide();" hidden><i class="fas fa-times"></i></span></p>
+    {% endfor %}
+    
+        <h2 style="text-transform: capitalize;">Create New {{packOrOffr}}</h2>
+        <form id="packOfrCreateForm" onsubmit="return submitFormOfPack()" method="post" enctype="multipart/form-data" action="{% url 'admm:addNewPackOffr' packOrOffr %}" style="">
+            {% csrf_token %}
+            <table id="packCreate" style="width:100%;">
+                <tr>
+                    <td>
+                        <label>Description</label>
+                    </td>
+                    <td>
+                        <textarea style="width:250px;font-family:Arial" name="description" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Start Date</label>
+                    </td>
+                    <td>
+                        <input id="id_startdate" type="date" name="startdate" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>End Date</label>
+                    </td>
+                    <td>
+                        <input id="id_enddate" type="date" name="enddate" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Discount</label>
+                    </td>
+                    <td>
+                        <input type="number" style="width: 100px;" name="discount" min="0" max="100" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="margin-right:10px;"> 
+                        <input type="number" value={{isPack}} name="isPack" id="id_isPack" hidden>
+
+                        <input type="text" name="selectedAdvs" id="id_selectedAdvs" hidden>
+                        <!-- <input type="text" name="selectedAdvsQntt" id="id_selectedAdvsQntt" hidden> -->
+                        
+                        <!-- <input type="number" name="selectedAdvCnt" id="id_selectedAdvCnt" hidden value=0> -->
+                        <button class="successBtn" id="createBtn">Create </button>
+                    </td>
+                </tr>
+            </table>
+            <h2>Select Advertisements</h2>
+            {% include 'admm/advListBase.html' %}
+        </form>
+    </article>
+
+    </html>

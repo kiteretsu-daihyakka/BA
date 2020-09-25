@@ -1,0 +1,99 @@
+{% include 'signin/header.html' %}
+{% load staticfiles %}
+
+  <section class="cat_product_area section_gap section_cat">
+      <div class="cat_container">
+        <div class="row flex-row-reverse prod_row">
+          <div class="col-lg-9 img_prod">
+            <div class="latest_product_inner">
+              <div class="row">	
+        {% for ad in advs %}
+			  <!--======== 1 ========-->
+                <div class="col-lg-3 col-md-6">
+                  <div class="single-product">
+                    <div class="product-img">
+                      <img
+					    height=230px
+						width=50px
+                        class="card-img"
+                        src="{{ad.defaultimgpath.url}}"
+                        alt=""
+                      />
+                      <div class="p_icon">
+                        <a href="{% url 'signin:product_detail' ad.advid %}">
+						  <i class="fas fa-eye"></i>
+                        </a>
+                        <!--<a href="{% url 'signin:add_to_wishlist' ad.advid %}">-->
+                        <a>
+                          <i class="far fa-heart" onclick="addwish({{ad.advid}});"></i>
+                        </a>
+                        <a href="{% url 'signin:addcart' ad.advid %}">
+                          <i class="fas fa-shopping-cart"></i>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="product-btm">
+                      <a href="#" class="d-block">
+                        {% if cat.categoryname == 'Rickshaw' %}
+                        <h4>for {{ad.minquantity}} quantity</h4>
+                        {% else %}
+                        <h4>Height {{ad.height}} width {{ad.width}}</h4>
+                        {% endif %}
+                      </a>
+                      <div class="mt-3">
+                        <!-- {- for rate in d_prices-} -->
+                        <!-- {- ifequal rate.advertisement_advid ad.advid -} -->
+                        <span class="mr-2">Starts from {{ad.startsfrm}} {{ad.days}} Days</span>
+                        <!-- {- endifequal -} -->
+                        <!-- {- endfor -} -->
+                        <h6 class="loc"><i class="fas fa-map-marker-alt"></i> {{ad.area_areaid}}</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+		
+              </div>
+            </div>
+          </div>
+		   <div class="col-lg-3">
+            <div class="left_sidebar_area">
+              <aside class="left_widgets p_filter_widgets left_cat_sec">
+                <div class="l_w_title">
+                  <h3>Browse Categories</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                  {% for subcat in subcats %}
+                    <li>
+                      <a href="{% url 'signin:products_fltr' subcat.id %}">{{subcat.subcatname}}</a>
+                    </li>
+                  {% endfor %}
+                    <!--li>
+                      <a href="#">Dried Fish</a>
+                    </!--li>
+                    <li>
+                      <a href="#">Fresh Fish</a>
+                    </li>
+                    <li>
+                      <a href="#">Meat Alternatives</a>
+                    </li>
+                    <li>
+                      <a href="#">Fresh Fish</a>
+                    </li>
+                    <li>
+                      <a href="#">Meat Alternatives</a>
+                    </li>
+                    <li>
+                      <a href="#">Meat</a>
+                    </li-->
+                  </ul>
+                </div>
+              </aside>
+			  </div>
+			  </div>
+			  </div>
+			  </div>
+			</section>
+<!--======================footer start======================-->
+{% include 'signin/footer.html' %}

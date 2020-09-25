@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User detail</title>
+    {% load static %}
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <style>
+        .usrDtlTbl th{
+            text-align:left;
+        }
+        .usrDtlTbl tr{
+            height:30px;
+        }
+        .usrDtlTbl{
+            width:40%;
+            height:400px;
+        }
+        h3{
+            text-align:center;
+            color:green;
+        }
+        #submitBtn{
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+            height:40px;
+            width:180px;
+            background-color:#32CD32;
+            font-size:medium;
+            margin-top:20px;
+            right:30px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('#submitBtn').click(function(){
+                if(confirm('You pressed make admin button')){
+                    $.ajax({
+                        url:"{% url 'admm:makeAdmin' %}",
+                        data:{
+                            'id':"{{object.id}}",
+                        },
+                        dataType:'json',
+                        success: function (data){
+                            if (data.result==1){
+                                $('#resultMsg').html('User marked as admin successfully!');
+                                $('#resultMsg').parent().show();
+                                $('#roleTd').html('Admin');
+                            }
+                            else{
+                                alert('Error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <div hidden>
+        <p id="resultMsg" style="width:100%;background-color:lightgreen;height:30px;padding-top:7px;"></p>
+        <span style="float:right;" onclick="$(this).parent().hide();"><i class="fa fa-times"></i></span>
+    </div>
+
+    <h3>User Detail</h3>
+    {% if object.userroleid.roleid == 3 %}
+    <div style="width:100%;text-align:right;margin-right:20px;">
+        <button type="button" id="submitBtn">Make Admin</button>
+    </div>
+    {% endif %}
+    <table class="usrDtlTbl" style="width:80%;">
+        <tr>
+            <th>Name</th>
+            <td>{{object}}</td>
+        </tr>
+        <tr>
+            <th>Mobile No.</th>
+            <td>{{object.mobileno}}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{object.email}}</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{{object.addressline1}}</td>
+        </tr>
+        <tr>
+            <th>Area</th>
+            <td>{{object.areaid}}</td>
+        </tr>
+        <tr>
+            <th>City</th>
+            <td>{{object.areaid.city_cityid}}</td>
+        </tr>
+        {% if object.is_staff == 1 %}
+        <tr>
+            <th>Branch</th>
+            <td>{{object.branchid}}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Role</th>
+            <td style="font-weight:bold;" id="roleTd">{{object.userroleid}}</td>
+        </tr>
+        {% if object.userroleid.roleid == 2 or object.userroleid.roleid == 3  %}
+        <tr>
+            <th>Locked/Unlocked</th>
+            <td style="color:darkred;">
+                {% if object.is_active %}
+                        <a  href="{% url 'admm:lockUnlockUser' object.id 0 %}"><i class="fa fa-unlock"></i></a>
+                    {% else %}
+                        <a  href="{% url 'admm:lockUnlockUser' object.id 0 %}"><i class="fa fa-lock"></i></a>
+                    {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Date of Joining</th>
+            <td>{{object.date_joined}}</td>
+        </tr>
+        <tr>
+            <th>Last logged in time</th>
+            <td>{{object.last_login}}</td>
+        </tr>
+    </table>
+
+    {% if object.userroleid.roleid == 2 %}
+    <h3>Documents</h3>
+    <table id="sellerDocs" style="width:100%;margin-bottom:300px;">
+        <tr>
+        {% for doc in sellerDocs %}
+            <td><img src="/media/{{doc.docpath}}/" alt="{{doc.docpath}}" height="90px" width="100px"><br>{{doc.sellerdoclist_docid.docname}}</td>
+        {% empty %}
+            <td colspan="2">No documents</td>
+        {% endfor %}
+        </tr>
+    </table>
+    {% endif %}
+</article>
+</html>

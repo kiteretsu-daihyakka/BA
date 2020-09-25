@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if packOffr == 'package' %}Package{%else%}Offer{%endif%} Detail</title>
+    {% load static %}
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+
+    <style>
+        h3{
+            color:green;
+            float:left;
+        }
+        h4{
+            margin:0px;
+            padding-right:50px;
+        }
+        .dtlTbl tr{
+            height:50px;
+        }
+        .subDtlTbl th{
+            background-color:lightgreen;
+            border-bottom:1px solid black;
+            text-transform:uppercase;
+            font-size:smaller;
+        }
+        .subDtlTbl tr{
+            height:100px;
+        }
+        .subDtlTbl{
+            width:100%;
+            text-align:center;
+            padding-bottom:80px;
+            height:100px;
+        }
+    </style>
+    <script>
+        function confirmDel(ele){
+            if(!confirm('Are you sure you want to delete it?')){
+                return false;
+            }
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <div>
+
+    </div>
+    <h3 style="width:100%;">
+       {% if packOffr == 'package' %}Package{%else%}Offer{%endif%} Detail
+    </h3>
+    <table>
+        <tr>
+            <td><a id="editobjLink" href="{% url 'admm:packoffr_edit' packOffr pk %}"><i class="fa fa-edit"></i></a></td>
+            <td style="width:25px;" ><a onclick="return confirmDel(this)" id="delobjLink"  href="{% url 'admm:packoffr_del' packOffr pk %}"><i class="fa fa-trash"></i></a></td>
+        </tr>
+    </table>
+    <br>
+    <table class="dtlTbl" style="padding-left:0px;height:140px;">
+        <!--<tr>-->
+            <!--<td><h4>Id</h4></td>-->
+            <!--<td>{{obj.id}}</td>-->
+        <!--</tr>-->
+        <tr>
+            <td ><h4 style="padding:0px;margin:0px;">Description</h4></td>
+            <td>{{obj.description}}</td>
+        </tr>
+        <tr>
+            <td><h4>Discount</h4></td>
+            <td>{{obj.discount}}</td>
+        </tr>
+        <tr>
+            <td><h4>Start Date</h4></td>
+            <td>{{obj.startdate}}</td>
+        </tr>
+        <tr>
+            <td><h4>End Date</h4></td>
+            <td>{{obj.enddate}}</td>
+        </tr>
+        <!--<tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr><tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr>-->
+
+    </table>
+    <h3 style="width:100%;">Advertisements</h3>
+    {% if advObjs.count == 0 %}
+        <p>No advertisements</p>
+    {% else %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <table class="subDtlTbl" cellspacing="0">
+        <tr >
+            <th></th>
+            <th>Image</th>
+            <th>Height</th>
+            <th>Width</th>
+            <th style="">Registration No.</th>
+            <th style="width:220px;">Address</th>
+            <!--<th style="width:80px;">Max Days of booking</th>-->
+            <th>Subcategory</th>
+            <th>Area</th>
+            <th>City</th>
+            <th style="">Minimum quantity</th>
+            <th>Stock</th>
+            <th>Owner</th>
+            {% if packOffr == 'package' %}
+            <th>Package quantity</th>
+            {% endif %}
+        </tr>
+            {% for adv in subObjs %}
+            <tr>
+                <td style="width:25px;"><a href="{% url 'admm:adv_detail' adv.advertisement_advid.advid %}"><i class="fa fa-eye"></i></a></td>
+                <td><img src="/media/{{adv.advertisement_advid.defaultimgpath}}" height="100px" width="100px;" alt="advImg"></td>
+                <td>{{adv.advertisement_advid.height}}</td>
+                <td>{{adv.advertisement_advid.width}}</td>
+                <td>{%if adv.advertisement_advid.advregno is None %}-{%else%}{{adv.advertisement_advid.advregno}}{%endif%}</td>
+                <td style="text-align:left;">{%if adv.advertisement_advid.addressline1 is None %}-{%else%}{{adv.advertisement_advid.addressline1}}{%endif%}</td>
+                <!--<td>{{adv.maxdays}}</td>-->
+                <td>{{adv.advertisement_advid.subcategory_subcatid}}</td>
+                <td>{%if adv.advertisement_advid.area_areaid is None %}-{%else%}{{adv.advertisement_advid.area_areaid}}{%endif%}</td>
+                <td>{%if adv.advertisement_advid.city_cityid is None %}-{%else%}{{adv.advertisement_advid.city_cityid}}{%endif%}</td>
+                <td>{%if adv.advertisement_advid.minquantity is None %}-{%else%}{{adv.advertisement_advid.minquantity}}{%endif%}</td>
+                <td>{%if adv.advertisement_advid.stock is None %}-{%else%}{{adv.advertisement_advid.stock}}{%endif%}</td>
+                <td>{{adv.advertisement_advid.auth_user}}</td>
+                {% if packOffr == 'package' %}
+                <td>{{adv.quantity}}</td>
+                {% endif %}
+                <!--<td><input type="number" id="id_checkedAdvQn" name="checkedAdvQn" hidden></td>-->
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <!--<table class="subDtlTbl" style="width:100%;text-align:center;padding-left:0px;">-->
+        <!--<tr>-->
+            <!--<th>View</th>-->
+            <!--<th>Image</th>-->
+            <!--<th>Quantity</th>-->
+        <!--</tr>-->
+        <!--{% for subObj in subObjs %}-->
+            <!--<tr>-->
+                <!--<td><a href="{% url 'admm:adv_detail' subObj.advertisement_advid %}"><i class="fa fa-eye"></i></a></td>-->
+                <!--<td><img src="/media/{{subObj.advertisement_advid.defaultimgpath}}"></td>-->
+                <!--<td>{{subObj.quantity}}</td>-->
+            <!--</tr>-->
+        <!--{% endfor %}-->
+    <!--</table>-->
+    
+</article>
+</html>

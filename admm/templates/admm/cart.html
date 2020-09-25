@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/headerJquery.js' %}" rel="script"></script>
+    <script>
+        $(document).ready(function(){
+            $('.daysDD').change(function(){
+                var indx=$(this).attr('id');
+                var tmpSelector='id_price'+(indx.match(/(\d+)/))[0];
+                $('#'+tmpSelector).val($(this).val());
+                var ttl=0;
+                $('.price').each(function(){
+                    ttl+=parseFloat($(this).val());
+                });
+                $('#id_totalPrice').val(ttl);
+            });
+            $('#cpnInput').focus(function(){
+                $('.cpnMsg').hide();
+            });
+            $('#cpnCodeSend').click(function(){
+                    var ccode=$('#cpnInput').val();
+                    $.ajax({
+                        url:'{% url 'admm:cpn_validate' %}',
+                        data:{
+                            'coupon':ccode,
+                        },
+                        dataType:'json',
+                        success: function (data){
+                            if (data.msg=='succeed'){
+                                $('#cpnMsgSuccess').show();
+                            }
+                            else{
+                                $('#cpnMsgFail').show();
+                            }
+                        }
+                    });
+            });
+            $('.remAdvFrmCart').click(function(){
+                    var id=(($(this).attr('name')).match(/(\d+)/))[0];
+                    var tmpSlctr='advRow'+id.toString()
+                    $.ajax({
+                        url:'/adminsite/cart/rem/'+id+'/',
+                        success: function (){
+                                $('.'+tmpSlctr).remove();
+                        }
+                    });
+            });
+            <!--document.getElementById('id_cart_advs').value=;-->
+        });
+        <!--function cartAdvsList(var k){-->
+
+            <!--return k;-->
+        <!--}-->
+    </script>
+    <style>
+        h1{
+            text-align:center;
+        }
+        .dateInputs input{
+            border-width:0px 0px 1px 0px;
+            border-style:solid;
+            outline:none;
+            width:100px;
+        }
+        .advImg{
+            height:70px;
+            padding-left:30px;
+        }
+        #cartTbl{
+            border-collapse:separate;
+            border-spacing:0 15px;
+            width:95%;
+
+        }
+        #cartTbl th{
+            height:50px;
+            background-color:lightgray;
+            border:1px solid black;
+        }
+        .price,.TtlPrice{
+            border:none;
+            outline:none;
+            text-align:center;
+            font-size:20px;
+        }
+        </style>
+</head>
+<article style="margin-left:20px;">
+    <h1 style="color:red;">this is not used right now!!!!</h1>
+    <h1>Cart</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'admm:cart_save' cartAdvs.count %}">
+    {% csrf_token%}
+    <table id="cartTbl" >
+        <tr style="text-align:center;font-weight:bold;">
+            <th>Select</th>
+            <th style="border-left-width:0px;">View</th>
+            <th colspan="3" style="border-left-width:0px;">Detail</th>
+            <th style="border-left-width:0px;">Dates Selection</th>
+            <th style="border-left-width:0px;">Price (Rs.)</th>
+            <th style="border-left-width:0px;margin-bottom:150px;">Remove</th>
+        </tr>
+        {% for cart_adv in cartAdvs %}
+            <tr class="advRow{{cart_adv.id}}">
+                <td rowspan="2" style="text-align:center;"><input type="checkbox"></td>
+                <td rowspan="2" style="text-align:center;"><a href="/adminsite/adv/{{cart_adv.id}}/dtl"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                <td rowspan="2"><img alt="advertisement image" src="/media/{{cart_adv.id.defaultimgpath}}" class="advImg"></td>
+                <!--<td>Size: 120x75 </td>-->
+                <td>Size: {{cart_adv.id.height}}x{{cart_adv.id.width}}</td>
+                <td style="">Registratin No: {{cart_adv.id.advregno}}</td>
+                <td style="padding-left:30px;">Days: <select id="id_dwp{{cart_adv.id}}"  class="daysDD" required>
+                            <option></option>
+                            {% for dwp in cart_adv.id.durationwisepricing_set.all %}
+                                <option value="{{dwp.price}}">{{dwp.noofdays}}</option>
+                            {% endfor %}
+                            </select></td>
+                <td id="amount"><input value="{{cart_adv.id}}" type="number" name="adv{{forloop.counter}}" hidden style=""></td>
+                <td rowspan="2" style="margin-left:20px;text-align:center;"><a class="remAdvFrmCart" name="rem{{cart_adv.id}}"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
+            </tr>
+            <tr class="advRow{{cart_adv.id}}">
+                <td colspan="2"><i class="fa fa-map-marker" aria-hidden="true"></i> {{cart_adv.id.addressline1}},{{cart_adv.id.area_areaid}},{{cart_adv.id.city_cityid}}</td>
+                <td class="dateInputs" style="padding-left:30px;"><input type="text" placeholder="Start Date" name="sdate{{forloop.counter}}" required> To
+                    <input type="text" placeholder="End Date" name="edate{{forloop.counter}}" required></td>
+                <td><input type="number" id="id_price{{cart_adv.id}}" name="price{{forloop.counter}}" class="price" readonly></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="7" style="text-align:right;">______</td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align:right;">Got any coupon?
+                <input style="outline:none;border-width:0px 0px 1px 0px;border-style:solid;" id="cpnInput" placeholder="click here to enter">
+                <button type="button" id="cpnCodeSend">Check</button><br>
+                <span class="cpnMsg" id="cpnMsgSuccess" hidden>Coupon applied!</span>
+                <span class="cpnMsg" id="cpnMsgFail" hidden>Invalid coupon..</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align:right;padding-right:70px;"><h3>Total</h3></td>
+            <td><input id="id_totalPrice" type="number" name="totalPrice" class="TtlPrice" readonly></td>
+            <!--<td><button type="button" style="height:50px;width:200px;">Proceed to order</button></td>-->
+        </tr>
+        <tr>
+            <td colspan="8" style="text-align:right;"><button id="prcdBtn" type="submit">Proceed to Order</button></td>
+        </tr>
+    </table>
+        </form>
+
+</article>
+</html>
+

@@ -1,0 +1,59 @@
+/* leftSideBar.html*/
+.leftSideBarBtn{
+    cursor:pointer;
+}
+.menuOptions{
+    box-shadow:-1px 8px 15px;
+    height:100%;
+    cursor:pointer;
+    border-collapse:separate;
+    border-spacing:0 1.5px;
+    /**/
+}
+.menuOptions td{
+    padding-left:30px;
+    /*border:0.1px solid black;*/
+}
+.menuOptions td:hover{
+    background-color:#98FB98;
+}
+a:hover{
+    color:black;
+    text-decoration:none;
+}
+.menuOptions tr div{
+    padding-top:10px;
+    padding-bottom:0px;
+    /*height:33px;*/
+    width:200px;
+}
+.menuOptions tr{
+    /*width:300px;*/
+    font-size:large;
+    /*height:33px;*/
+    background-color:lightgreen;
+}
+.menuOptions tr:hover{
+    background-color:lightgreen;
+}
+/*.menuOptions span:hover{
+    color:green;
+    text-decoration:underline;
+}*/
+.backGRND{
+    background-color:white;
+}
+.leftSideBarMenuNdBtn,.menuOptions{
+    width:230px;
+    background-color:#00E676;
+}
+.leftSideBar{
+    height:88%;
+    top:12%;
+    /*padding-bottom:140px;*/
+    margin-right:140px;
+    position:fixed;
+    float:left;
+    box-shadow:1px 1px 1px -1px;
+    /*width:200px;*/
+}

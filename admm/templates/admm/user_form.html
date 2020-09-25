@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>My Profile</title>
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/adminJquery.js' %}" rel="script"></script>
+    <script src="{% static 'admm/javaScript/profile.js' %}?{% now 'U' %}" rel="script"></script>
+    <script>
+        var stObjUrl="{% url 'admm:location_stObjs' %}";
+    </script>
+    <script>
+        var ctObjUrl="{% url 'admm:location_citiObjs' %}";
+    </script>
+    <script>
+        var arObjUrl="{% url 'admm:location_areaObjs' %}";
+    </script>
+    <script>
+        var chckPwdUrl="{% url 'admm:checkPassword' %}";
+    </script>
+</head>
+<style>
+        /*#editBtn{
+            background-color: dodgerblue;
+        }
+        #updtBtn{
+            background-color: #32CD32;
+        }*/
+        #cnclBtn{
+            background-color: lightgrey;
+        }
+        /* #editBtn,#updtBtn,#cnclBtn{
+            border-radius: 7px;
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+        } */
+        /* .detailTable{
+            margin-left:auto;
+            margin-right:auto;
+        } */
+        .detailTable td {
+            padding:5px;
+            width:auto;
+        }
+        .detailTable tr{
+            height: 40px;
+        }
+        /* .detailTable td span{
+            padding-left: 100px;
+        } */
+        .detailTable th{
+            text-align:left;
+        }
+        .detailTable td,th{
+            width: 30%;
+        }
+        .detailTable{
+            width:90%;
+            margin: auto;
+            
+        }
+        .detailTable input,textarea{
+            font-size:15px;
+            border-radius:5px;
+            outline:none;
+            padding:5px;
+            background-color:whitesmoke;
+        }
+        .detailTable textarea{
+            width:60%;
+            height:40px;
+            font-family:Arial;
+        }
+        .myProfile{
+            text-align:center;
+            width:90%;
+            font-weight:bold;
+            font-size:30px;
+            color:green;
+            /* border-bottom:1px black solid; */
+            padding:5px;
+        }
+        .chngPwdLink:hover{
+            text-decoration: underline;
+        }
+        .section{
+            font-weight: 600;
+            font-size: large;
+            font-family:'Courier New', Courier, monospace;
+        }
+        /* .detailTable .hding{
+            font-weight:bold;
+        } */
+    </style>
+{% include 'admm/header.html' %}
+
+{% include 'admm/leftSideBar.html' %}
+
+<!--Add seller documents upload option to sellers-->
+<article>
+        <!-- <input id="pwdFlag" type="text" value=""> -->
+        <div>
+            <p>
+                {% for message in messages %}
+                    {{message}}
+                {% endfor %}
+            </p>
+        </div>
+        <div class="myProfile">
+            My Profile
+        </div>
+        <span class="section">Personal Details</span>
+        <hr>
+        
+        <form id="detailTableForm" action="" method='post' enctype='multipart/form-data'>
+        {% csrf_token %}
+            <table class="detailTable">
+                
+                {% for fld in form %}
+                {% if fld.name == 'areaid' %}
+                    <tr>
+                        <th>State:</th>
+                        <td>{{usr.areaid.city_cityid.state_stateid.statename}}</td>
+                        <td>
+                            <select id="states">
+                                <option value="">---------</option>
+                                {% for st in States %}
+                                    <option value="{{st.id}}">{{st.statename}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>City:</th>
+                        <td>{{usr.areaid.city_cityid.cityname}}</td>
+                        <td>
+                            <select id="cities">
+                                <option value="">---------</option>
+                                {% for ct in Cities %}
+                                    <option value="{{ct.id}}">{{ct.cityname}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{fld.label}}</th>
+                        <td>{{usr.areaid.areaname}}</td>
+                        <td class="inputFields">
+                            <select id="areas">
+                                <option value="">---------</option>
+                                {% for ar in Areas %}
+                                    <option value="{{ar.id}}">{{ar.areaname}}</option>
+                                {% endfor %}
+                            </select>
+                            {{fld}}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th>{{fld.label}}</th>
+                        <td>{{fld.value}}</td>
+                        <td class="inputFields">{{fld}}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}          
+                <!-- <tr>
+                    <th>Area:</th>
+                    <td>
+                        {{sar.areaname}}
+                        <select id="areas">
+                            <option value="">---------</option>
+                            {% for ar in Areas %}
+                                <option value="{{ar.id}}">{{ar.areaname}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr> -->
+                <!-- <tr class="inputFields" style="text-align: center;">
+                    <td colspan="3">
+                        Enter password to confirm it's you: <input type="password">
+                    </td>
+                </tr> -->
+                <tr>
+                    <td colspan="2">
+                        <button id="editBtn" class="primaryBtn" type="button">Edit Details</button>
+                        <button class="postBtns successBtn" id="updtBtn" type="button">Update</button>
+                        <button class="postBtns primaryBtn" id="cnclBtn" type="button">Cancel</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <!--Personal Details
+            <hr>
+            <table class="detailTable" style="background-color:whitesmoke;">
+                <tr>
+                    <td class="hding">First Name </td>
+                    <td>
+                        <input value="{{user.first_name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hding">Last Name </td>
+                    <td>
+                        <input value="{{user.last_name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hding">Mobile No.</td>
+                    <td><input value="{% if user.mobile %}{{user.mobile}}{% else %}-{% endif %}" readonly></td>
+                </tr>
+                <tr>
+                    <td class="hding">Email</td>
+                    <td><input value="{{user.email}}" readonly></td>
+                </tr>
+                <tr>
+                    <td class="hding">Address</td>
+                    <td><textarea readonly>{{user.addressline1}}</textarea></td>
+                </tr>
+                <tr>
+                    <td class="hding">State</td>
+                    <td>
+                        &nbsp;{{user.areaid.city_cityid.state_stateid.statename}}
+                        <select id="states">
+                            <option value="">Select</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hding">City</td>
+                    <td>
+                        &nbsp;{{user.areaid.city_cityid.cityname}}
+                        <select id="cities">
+                            <option value="">Select</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hding">Area</td>
+                    <td>
+                        &nbsp;{{user.areaid.areaname}}
+                        <select id="areas">
+                            <option value="">Select</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="actions">
+                    <td>
+                        <button id="editBtn" type="button">Edit Details</button>
+                        <button id="cnclBtn" type="button">Cancel</button>
+                        <button id="updtBtn" type="button">Update Details</button>
+                    </td>
+                </tr>
+            </table>-->
+        <br>
+        <br>
+        <br>
+        
+        {% if sellerDocList %}
+            <span class="section">Documents Uploading</span>
+            <hr>
+            <form id="sellerDocsForm" action="{% url 'admm:seller_docs' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table style="padding-left: 20px;padding-top: 5px;width:80%;">
+                    {% for doc in sellerDocList %}
+                        <tr style="height: 30px;">
+                            <td>{{doc.docname}}</td>
+                            <td>
+                                <input type="file" name="{{doc.docname}}" accept="image/*,application/pdf" required/>
+                            </td>
+                            <!-- <td><input class="viewBtn" type="button" value="View"></td> -->
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"><button type="submit">Submit</button></td>
+                    </tr>
+                </table>
+            </form>
+            <br>
+            <br>
+        {% endif %}
+
+        <span class="section">Change Password</span>
+            
+
+        <hr>
+        <table>
+            <tr>
+                <td><a class="chngPwdLink" href="{% url 'admm:chngpwd' %}" style="color:limegreen;">Click here to change password..</a></td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tr>
+                <td class="hding">You joined this website on : </td>
+                <td>{{user.date_joined}}</td>
+            </tr>
+        </table>
+</article>
+</html>

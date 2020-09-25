@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Adv Page here</title>
+        {% load staticfiles %}
+        <link href="{% static 'adv/css/bootstrap.min.css' %}" type='text/css' rel='stylesheet' />
+        <link href="{% static 'adv/style.css' %}" type='text/css' rel='stylesheet' />
+        <script type="text/javascript" src="{% static 'adv/jquery-3.3.1.min.js'%}"> </script>
+        <script src="{% static 'adv/myJquery.js'%}"> </script>
+    </head>
+    <body>
+        <table style="width: 100%;">
+            <tr>
+                <td rowspan="2"><img class="logoTop" src="{% static 'adv/images/logo.png'%}"/></td>
+                <td class='signUpLogin'>Sign up/Log in</td>
+            </tr>
+            <tr>
+                <td class="menuBtn" style="direction:rtl">&#61;</td>
+            </tr>
+        </table>
+        <div class="menuTbl">
+        <table>
+            <tr>
+                <td><span>Book Advertisement</span></td>
+            </tr>
+            <tr>
+                <td><span>Categories</span></td>
+            </tr>
+            <tr>
+                <td><span>About us</span></td>
+            </tr>
+            <tr>
+                <td><span>Contact us</span></td>
+            </tr>
+            <tr>
+                <td><span>Help</span></td>
+            </tr>
+        </table>
+        </div>
+        <div>
+            <p class="alert-secondary">What is light pole?<span style="float: right;">-</span></p>
+            <p class="lightPole">
+                yeah it's ur job viraj..
+            </p>
+            <select>
+                City
+                <option>Select</option>
+                <option>Select</option>
+            </select>
+        </div>
+    </body>
+</html>

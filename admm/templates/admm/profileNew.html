@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    {% load static %}
+    <style>
+        input{
+            padding:5px;
+        }
+        .{% if profile_url %}hasntPhoto {% else %}hasPhoto {% endif %}
+        {
+            display:none;
+        }
+
+    </style>
+    <link type="text/css" href="{% static 'admm/mycss/profile.css' %}" rel="stylesheet">
+    <link href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'admm/jquery.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script>
+        <!--var imgUpldUrl="url 'iamdbApp:profilePicUpld' ";-->
+        <!--var imgDelUrl="url 'iamdbApp:profilePicDel' ";-->
+        var token="{{csrf_token}}";
+        var initial="{{ user.first_name }}".charAt(0).toUpperCase();
+        var id="{{user.id}}";
+        var color;
+        if (id.length>2){
+            color="rgb("+255%parseInt(id.charAt(0)).toString()+","+255%parseInt(id.charAt(1)).toString()+","+255%parseInt(id.charAt(2)).toString()+")";
+        }
+        else if(id.length==2){
+            // alert('d');
+            color="rgb("+(255%parseInt(id.charAt(0))).toString()+","+(20*parseInt(id.charAt(1))).toString()+",255)";
+        }
+        else{
+            color="rgb("+(255%parseInt(id.charAt(0))).toString()+",255,255)";
+        }
+    </script>
+    <script src="{% static 'admm/javaScript/profile.js' %}"></script>
+</head>
+<body>
+    <header>
+        {% include 'admm/header.html' %}
+    </header>
+    <br>
+    <br>
+    <br>
+    <!--{{user.id}}-->
+    <form action="" method='post' enctype='multipart/form-data'>
+        {% csrf_token %}
+        <table style="width:90%;text-align:center;">
+            <thead>
+                <!--<tr>-->
+                    <!--<td style="text-align:right;" colspan="2"><i class="fas fa-ellipsis-v" style="font-size:30px;color:gray;"></i> </td>-->
+                <!--</tr>-->
+                <tr>
+                    <td style="padding:10px;" colspan="2"> <h1>My Profile</h1> </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <ul style="margin-left:300px;padding-top:10px;">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="dropdownScnd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:lightgray;">
+                                    <!-- <i class="fas fa-user" style="color:lightgray;"></i> -->
+                                {% if profile_url %}
+                                    <div class="avatar" style="background-image: url({{profile_url.url}})">
+                                    </div>
+                                {% else %}
+                                    <div class="avatar" >
+                                        <span id="initialLetter" style="font-size:125px;padding-top: 50px;color:white;"></span>
+                                    </div>
+                                    <!-- <form class="form"> -->
+                                    <!-- </form> -->
+                                {% endif %}
+                            </a>
+                                <div class="dropdownMenu dropdown-menu" aria-labelledby="dropdownScnd" >
+
+                                    <div  class="hasPhoto" >
+                                        <a class="viewLink dropdown-item" href="{{profile_url.url}}">View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" onclick="$('#imgUpld').click();">Change</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="removeLink dropdown-item">Remove</a>
+                                    </div>
+                                    <div class="hasntPhoto">
+                                        <a class="dropdown-item" onclick="$('#imgUpld').click();">Upload Profile</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                {{form.as_table}}
+                <tr>
+                    <td colspan="2"> <button id="editBtn" class="btn btn-primary" type="button">Edit Details</button> <button class="postBtns btn btn-success" type="submit">Update</button> <button class="postBtns btn btn-primary" id="cnclBtn" type="button">Cancel</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <form id="imageForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input class="form-control" id="imgUpld" type="file" accept="image" name="profile_pic" hidden>
+         <!--<button class="btn btn-secondary" type="submit">Upload</button> -->
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    More Options:
+    <hr width="80%">
+    <a href="url 'authApp:user-profile-changePwd' "><button class="btn btn-info">Change Your Password</button></a>
+
+</body>
+</html>

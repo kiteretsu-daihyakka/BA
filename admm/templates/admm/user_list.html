@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advertisements</title>
+    {% load static %}
+
+    <style>
+        .titles{
+            width:80%;
+            height:50px;
+            cursor:pointer;
+            text-align:center;
+        }
+        .titles  td{
+            border:1px solid black;
+            border-right:0;
+            font-size:larger;
+            text-transform:uppercase;
+        }
+        .titles td:last-child{
+            border-right:1px solid black;
+        }
+        .users{
+            text-align:center;
+            border-collapse:separate;
+            border-spacing:0 15px;
+        }
+        .users th{
+            border-bottom:1px solid black;
+            background-color:lightgreen;
+            height:60px;
+            text-transform:uppercase;
+        }
+        .users tr{
+            height:60px;
+        }
+        /*#packOffer{
+            width:100%;
+            direction:rtl;
+        }
+        #packOffer td{
+            border:1px solid black;
+            width:160px;
+            height:40px;
+            text-align:center;
+            cursor:pointer;
+        } */
+
+    </style>
+    {% load static %}
+
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/adminJquery.js' %}" rel="script"></script>
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script>
+        $(document).ready(function(){
+            // $('.titles tr:first-child').css('border-bottom-width','0px');
+            $('.titles tr td').click(function(){
+                // $(this).css('border-bottom-width','0px');
+                // $('.titles th').css('border-bottom-width','1px');
+                $('#id_usrRoleFilter').val(parseInt($(this).attr('id')));
+                $('#submitClick').click();
+            });
+            $('#newRoleBtn').parent().submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url:"{% url 'admm:addRole' %}",
+                    data:{
+                        'role':$('#newRoleInput').val().trim(),
+                    },
+                    dataType:'json',
+                    success: function (data){
+                        if(data.result==1){
+                            $('.titles tr').children().css('background-color','white');
+                            $('.titles tr').children().css('font-weight','normal');
+                            $('.titles tr').children().css('font-size','larger');
+                            $('.titles tr').children().css('color','black');
+                            $('.titles tr').append("<td style='background-color:lightgray;color:green;font-size:larger;'>"+$('#newRoleInput').val().trim()+"</td>");
+                            $('.usrsRow').remove();
+                            $('#addUsers').show();
+                        }
+                        else{
+                            alert('f');
+                        }
+                    }
+                });
+            });
+            /*$('.sellerHdng').click(function(){
+                $('#id_usrRoleFilter').val(2);
+                $(this).css('background-color','lightgray');
+                $('.adminHdng,.buyerHdng').css('background-color','white');
+                $('#submitClick').click();
+            });
+            $('.buyerHdng').click(function(){
+                $('#id_usrRoleFilter').val(3);
+                $(this).css('background-color','lightgray');
+                $('.adminHdng,.sellerHdng').css('background-color','white');
+                $('#submitClick').click();
+            });
+            $('#newRoleBtn').click(function(){
+                $('#newRoleForm').toggle();
+            });
+            $('#closePackPopUp').click(function(){
+                $('#packCreate').hide();
+            });
+            $('#packBtn').click(function(){
+                $('#id_isPack').val(1);
+                $('#packCreate').toggle();
+                $('#offerHeading').hide();
+                $('#packHeading').show();
+                $(this).html('Preview Package');
+                $('#id_selectedAdvCnt').val($('input:checkbox:checked').length);
+            });
+            $('#offrBtn').click(function(){
+                $('#id_isPack').val(0);
+                $('#packCreate').toggle();
+                $('#packHeading').hide();
+                $('#offerHeading').show();
+                $(this).html('Preview Package');
+                $('#id_selectedAdvCnt').val($('input:checkbox:checked').length);
+            });
+            $('#showChckBoxes').click(function(){
+                $('input:checkbox').toggle();
+            });
+
+            $('#submitClick').click(function(){
+                $.ajax({
+                    type:'POST',
+                    url:'/adminsite/listadv/',
+                    data:{
+                        isowned:$('#id_isowned').val(),
+                    },
+                    success:function(){
+                        <!--alert('done');
+                    }
+                });
+            });*/
+        });
+
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+
+    {% for message in messages %}
+        <p>{{message}} <a href="/adminsite/listadv/">Ok</a></p>
+    {% endfor %}
+
+            <!--{% csrf_token %}-->
+<!--<div style="position:fixed;border:1px solid black;margin:100px 400px;" id="packCreate" hidden>-->
+            <!--<table style="border:1px solid black;background-color:lightgray;">-->
+                <!--<tr>-->
+                    <!--<td colspan="4" ></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th colspan="4"><span id="packHeading">Package</span> <span id="offerHeading">Offer</span> <span style="text-align:right;cursor:pointer;" id="closePackPopUp">&times;</span></th>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><label>Description</label></td>-->
+                    <!--<td><input name="description" type="text"></td>-->
+                    <!--<td></td>-->
+                    <!--<td></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><label>Start Date</label></td>-->
+                    <!--<td><input type="date" name="startdate"></td>-->
+                    <!--<td><label>End Date</label></td>-->
+                    <!--<td><input type="date" name="enddate"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><label>Discount</label></td>-->
+                    <!--<td><input type="number" style="width:150px;" name="discount"></td>-->
+                    <!--<td></td>-->
+                    <!--<td></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td colspan="4" style="direction:rtl;"> <button style="width:60px;height:35px;">Save</button> <button style="width:150px;height:35px;">See Advertisement</button></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+            <!--<input type="number" value=1 name="isPack" id="id_isPack" >-->
+            <!--<input type="number" name="selectedAdvCnt" id="id_selectedAdvCnt" value=0>-->
+
+    <!--</div>-->
+
+    <!--<button id="newRoleBtn">Create New Role</button>-->
+
+    <!--<form action="{% url 'admm:save_role' %}" id="newRoleForm" method="post" enctype="multipart/form-data"  hidden >-->
+        <!--{% csrf_token %}-->
+        <!--<input type="text" name="role" required> &nbsp;-->
+        <!--<button type="submit">Insert</button>-->
+    <!--</form>-->
+
+    <div style="width:100%;text-align:right;">
+        <a href="{% url 'admm:rprt_usrs' roleId %}" style="margin-right:20px;color:green;text-decoration:underline;">Generate Report</a>
+    </div>
+
+    <h2 style="text-align:center;">Users</h2>
+    <!--<div style="text-align:right;margin:20px;" hidden>-->
+
+        <!--<a style="color:green;text-decoration:underline;" onclick="$('.insrtRoleTools').slideToggle();">Add New Role</a><br>-->
+        <!--<form action="" class="insrtRoleTools">-->
+            <!--<br>-->
+            <!--<input id="newRoleInput" type="text" required>-->
+            <!--<button id="newRoleBtn" type="submit">Insert</button>-->
+        <!--</form>-->
+
+    <!--</div>-->
+    <!--<div id="packOffer">-->
+        <!--<table id="">-->
+            <!--<tr>-->
+                <!--<td id="offrBtn">Apply Offer</td>-->
+                <!--<td id="packBtn">Create Package</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    <!--</div>-->
+
+    <table class="titles" cellspacing="0" style="width:100%;">
+            <tr>
+                {% for role in roles %}
+                    {% if roleId is role.roleid %}
+                        <td id="{{role.roleid}}" style="color:green;background-color:lightgray;">{{role.rolename}}</td>
+                    {% else %}
+                        <td id="{{role.roleid}}" style="">{{role.rolename}}</td>
+                    {% endif %}
+                {% endfor %}
+
+                <!--<th class="sellerHdng" style="border-right:1px solid black;">Sellers</th>-->
+                <!--<th class="buyerHdng" style="">Buyers</th>-->
+            </tr>
+    </table>
+    {% if object_list.count == 0 %}
+        <p>No users</p>
+    {% else %}
+    <br>
+    <!--<button type="button" id="showChckBoxes">Select Advertisements</button>-->
+
+    <table class="users" cellspacing="0">
+        <tr>
+            <th ></th>
+            <th ></th>
+            <!--<th>Id</th>-->
+            <th>Last Logged In</th>
+            <th>Name</th>
+            <th>Email Id</th>
+            <!--<th>Is Staff </th>-->
+            <th>Is Active</th>
+            <!--<th>Is Locked</th>-->
+            <th>Date Of Joining</th>
+            <th style="width:220px;">Address</th>
+            <th>Area</th>
+            <th>City</th>
+            <th>Mobile No.</th>
+            {% if roleId is 1 %}
+            <th>Branch Id</th>
+            {% endif %}
+
+        </tr>
+            {% for usrObj in object_list %}
+            <tr class="usrsRow" style="{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+                <!--<th><input type="checkbox" name="selectedUsr{{forloop.counter}}" value="{{usrObj.id}}"  hidden></th>-->
+                <td ><a href="{% url 'admm:usr_detail' usrObj.id %}"><i class="fa fa-eye"></i></a></td>
+                <td ><a id="delAdvLink"  href="{% url 'admm:usr_del' usrObj.id %}"><i class="fa fa-trash"></i></a></td>
+                <!--<td>{{usrObj.id}}</td>-->
+                <td>{{usrObj.last_login}}</td>
+                <td>{{usrObj}}</td>
+                <td>{{usrObj.email}}</td>
+                <td>{{usrObj.is_active}}</td>
+                <!--<td>{{usrObj.islocked}}</td>-->
+                <td>{{usrObj.date_joined}}</td>
+                <td>{%if usrObj.addressline1 is None %}-{%else%}{{usrObj.addressline1}}{%endif%}</td>
+                <td>{{usrObj.areaid}}</td>
+                <td>{{usrObj.areaid.city_cityid}}</td>
+                <td>{%if usrObj.mobileno is None %}-{%else%}{{usrObj.mobileno}}{%endif%}</td>
+                {% if roleId is 1 %}
+                <td>{%if usrObj.branchid is None %}-{%else%}{{usrObj.branchid}}{%endif%}</td>
+                {% endif %}
+                <!--<td>{%if usrObj.city_cityid is None %}-{%else%}{{adv.city_cityid}}{%endif%}</td>-->
+                <!--<td>{%if adv.minquantity is None %}-{%else%}{{adv.minquantity}}{%endif%}</td>-->
+                <!--<td>{%if adv.stock is None %}-{%else%}{{adv.stock}}{%endif%}</td>-->
+                <!--<td>{{adv.auth_user}}</td>-->
+
+                <!--<td><input type="number" id="id_checkedAdvQn" name="checkedAdvQn" hidden></td>-->
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <!--<div id="addUsers" style="text-align:center;" hidden>-->
+        <!--<a href="{}">Add Users</a>-->
+    <!--</div>-->
+    <br>
+
+
+    <form action="/adminsite/users/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="number" id="id_usrRoleFilter" name="usrRoleFilter" hidden value="">
+        <button id="submitClick" type="submit" hidden></button>
+    </form>
+</article>
+</html>

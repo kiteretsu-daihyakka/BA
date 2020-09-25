@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Location</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <style>
+        article table{
+            float:left;
+            padding-right:50px;
+            width:20%;
+            text-align:left;
+        }
+        .cns,.sts input{
+            width:90px;
+        }
+        .cns{
+        }
+        #sahil{
+            color:red;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('.cns').mouseover(function(){
+                $(this).children('td').find('.input_showlink,.delLink,.expndLink').show();
+            });
+            $('.stateTbl button').click(function(){
+                 alert();
+            });
+            $('.input_showlink').click(function(){
+                $(this).parent().find('span').fadeToggle('fast');
+                <!--indx=$(this).attr('id');-->
+                <!--indx=(indx.match(/(\d+)/))[0];-->
+                <!--slctr='id_cn_updtOptns'+indx;-->
+                <!--$('#'+slctr).slideToggle('fast');-->
+            });
+            $('.sts,.cns').mouseout(function(){
+                $(this).find('.input_showlink,.delLink,.expndLink').hide();
+            });
+            $('.delLink').click(function(){
+                rslt=confirm('Are you sure to delete it?');
+                if(rslt==false){
+                    return;
+                }
+                indx=$(this).attr('id');
+                indx=(indx.match(/(\d+)/))[0];
+                $.ajax({
+                    url:'/adminsite/location/del/',
+                    data:{
+                        'id':indx,
+                    },
+                    dataType:'json',
+                    success: function (data){
+                        if (data.msg==1){
+                            tmpSlctr='cn_row'+indx
+                            alert('Deleted Successfully.');
+                            $('#'+tmpSlctr).remove();
+                        }
+                        else{
+                            alert("Couldn't delete it, it's used in other dataentries..");
+                        }
+                    }
+                });
+            });
+            $('.expndLink').click(function(){
+                var indx=$(this).attr('id');
+                indx=(indx.match(/(\d+)/))[0];
+                var thisEle=this;
+                $.ajax({
+                    url:'/adminsite/location/stobjects/',
+                    data:{
+                        'id':indx,
+                    },
+                    dataType:'json',
+                    success: function (data){
+                        console.log(data);
+                        $('.sts').remove();
+                        for(var i=0;i<data['stObjs'].length;i++){
+                            $('.stateTbl').append("<tr id='stRow"+data['stObjs'][i]['id']+"'><td style='background-color:lightgray;'><a>"+data['stObjs'][i]['statename']+"</a><a class='input_showlink'><i class='fas fa-edit'></i></a> <a class='delLink'><i class='fas fa-trash'></i></a> &nbsp;&nbsp;&nbsp; <a class='expndLink'><i class='fas fa-play'></i></a><br><span><input type='text' value='"+data['stObjs'][i]['statename']+"'><button type='button' >Update</button></span>");
+                            $('.stateTbl').last('tr').addClass('tmp');
+                        }
+                    }
+                });
+            });
+            $('.cnUpdtBtn').click(function(){
+                indx=$(this).attr('id');
+                indx=(indx.match(/(\d+)/))[0];
+                if ($('#cnName'+indx.toString()).html()==$('#cnInput'+indx.toString()).val()){
+                    return;
+                }
+                tmpSlctr='cnInput'+indx;
+                $.ajax({
+                    url:'/adminsite/location/upd/',
+                    data:{
+                        'id':indx,
+                        'name':$('#'+tmpSlctr).val(),
+                    },
+                    dataType:'json',
+                    success: function (data){
+                        alert('Update successfully!');
+                        tmpSlctr='cnName'+indx;
+                        $('#'+tmpSlctr).html(data.name);
+                        tmpSlctr='cnInput'+indx;
+                        $('#'+tmpSlctr).val(data.name);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article style="margin-top:110px;">
+    <h1 STYLE="font-size:25px;color:green;MARGIN-RIGHT:110PX;margin-bottom:60px;">LOCATION</h1>
+    <table>
+        <tr>
+            <th>Country</th>
+        </tr>
+        {% for cntry in cnobjects %}
+            <tr class="cns" id="cn_row{{cntry.id}}">
+                <td style="background-color:lightgray;">
+                    <a class="cnName" id="cnName{{cntry.id}}">{{cntry.countryname}}</a>
+                    <a class="input_showlink" id="cnEditLink{{cntry.id}}" hidden><i class="fas fa-edit"></i></a>
+                    <a class="delLink" id="cnDelLink{{cntry.id}}" hidden><i class="fas fa-trash"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="expndLink" id="id_cnExpndLink{{cntry.id}}" hidden><i class="fas fa-play"></i></a><br>
+                    <span id="id_cn_updtOptns{{cntry.id}}" class="cn_updtOptns" hidden>
+                        <input class="cnInput" id="cnInput{{cntry.id}}" type="text" value="{{cntry.countryname}}">
+                        <button class="cnUpdtBtn" id="cnUpdtBtn{{cntry.id}}" type="button" >Update</button>
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <table class="stateTbl">
+        <tr>
+            <th>State</th>
+        </tr>
+        {% for st in stobjects %}
+            <!--<tr class="sts" id="st_row{{st.id}}">-->
+                <!--<td style="background-color:lightgray;">-->
+                    <!--<a class="cnName" id="stName{{st.id}}">{{st.statename}}</a>-->
+                    <!--<a class="cnInput_showlink" id="stEditLink{{cntry.id}}" hidden><i class="fas fa-edit"></i></a>-->
+                    <!--<a class="cn_DelLink" id="stDelLink{{cntry.id}}" hidden><i class="fas fa-trash"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <!--<a class="cnExpndLink" id="id_stExpndLink{{cntry.id}}" hidden><i class="fas fa-play"></i></a><br>-->
+                    <!--<span id="id_st_updtOptns{{cntry.id}}" class="cn_updtOptns" hidden>-->
+                        <!--<input class="cnInput" id="stInput{{cntry.id}}" type="text" value="{{st.statename}}">-->
+                        <!--<button class="cnUpdtBtn" id="stUpdtBtn{{cntry.id}}" type="button" >Update</button>-->
+                    <!--</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+        {% endfor %}
+    </table>
+    <table class="ctTbl">
+        <tr>
+            <th>City</th>
+        </tr>
+        {% for citi in ctobjects %}
+            <tr class="cts">
+                <td><span><a href="/adminsite/location/{{citi.state_stateid.country_countryid.id}}/{{citi.state_stateid.id}}/{{citi.id}}">{{citi.cityname}}</a></span></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <table>
+        <tr>
+            <th>Area</th>
+        </tr>
+        {% for aria in arobjects %}
+            <tr class="areas">
+                <td><span><a href="/adminsite/location/{{aria.id}}">{{aria.areaname}}</a></span></td>
+            </tr>
+        {% endfor %}
+    </table>
+</article>
+</html>

@@ -1,0 +1,42 @@
+/* header.html */
+#tableContents div{
+    float:left;
+    padding-bottom:30px;
+}
+#myAc{
+    cursor:pointer;
+}
+#myAcPanel{
+    width:170px;
+    text-align:left;
+    font-family:Novecento sans;
+    <!--border:1px solid black;-->
+}
+#myAcPanel{
+    position:fixed;
+    <!--border:1px solid black;-->
+}
+header{
+    top:0;
+    position:fixed;
+    width:99%;
+
+    box-shadow:1px 1px 10px;
+
+}
+.logo{
+    height:70px;
+    margin-left:-6px;
+}
+.headerContent{
+    text-align:center;
+    height:80px;
+    width:100%;
+    background-color:#00E676;
+    border:0px solid black;
+    table-layout:fixed;
+}
+.headerContent .effects:hover{
+    background-color:#00EF80;
+    cursor:pointer;
+}

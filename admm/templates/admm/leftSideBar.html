@@ -1,0 +1,75 @@
+{% load static %}
+    <!--<script src="{% static 'admm/leftSideBar.js' %}" rel="script"></script>-->
+    <link href="{% static 'admm/mycss/leftSideBar.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        function hideSideBar(ele){
+            <!--$('.menuOptions').toggle();-->
+            <!--$(ele).siblings('span').htmlToggle('QUICK LINKS');-->
+        }
+    </script>
+<div class="leftSideBar">
+        <table class='leftSideBarMenuNdBtn'>
+        </table>
+        <table class='menuOptions' cellspacing="0">
+            <tr>
+                <td style="background-color:#00E676;cursor:default;"><span style="font-size:larger;font-weight:bold;color:black;">QUICK TABS </span><a style="padding-left:15px;" onclick="hideSideBar(this)" hidden><i class="fas fa-bars"></i></a></td>
+                <!--<td class="leftSideBarBtn"><span><i class="fas fa-bars"></i></span> </td>-->
+            </tr>
+            <tr>
+                <td><a  href="{% url 'admm:listadv' %}"><div>Advertisements</div></a></td>
+            </tr>
+            {% if user.is_staff %}
+            <tr>
+                <td><a style="" href="{% url 'admm:branch_viewadd' %}"><div>Branches</div></a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'admm:categorycreateorview' %}"><div>Categories</div></a></td>
+            </tr>
+            {%endif%}
+            <!--<tr>-->
+                <!--<td><a>Charts</a></td>-->
+                <!--<td><span>Charts></span><ul style="list-style-type:none;margin:0px;"><li>Analyze</li><li>Analyze</li><li>Analyze</li><li>Analyze</li></ul></td>-->
+            <!--</tr>-->
+            {% if user.is_staff %}
+            <tr>
+                <td><a style="" href="{% url 'admm:cmisnLst' %}"><div>Commission</div></a></td>
+            </tr>
+            <tr>
+                <td><a style="" href="{% url 'admm:fdbckCmplntList' 'complaints' %}"><div>Complaints</div></a></td>
+            </tr>
+            {%endif%}
+            <tr>
+                <td><a href="{% url 'admm:couponsListOrAdd' %}"><div>Coupons</div></a></td>
+            </tr>
+            <tr>
+                <td><a style="" href="{% url 'admm:index' %}"><div>Dashboard</div></a></td>
+            </tr>
+            {% if user.is_staff %}
+            <tr>
+                <td><a style="" href="{% url 'admm:fdbckCmplntList' 'feedbacks' %}"><div>Feedback</div></a></td>
+            </tr>
+            {%endif%}
+            <tr>
+                <td><a href="{% url 'admm:list_orders' %}"><div>Orders</div></a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'admm:packOrOffr_list' 'offer' %}"><div >Offers</div></a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'admm:packOrOffr_list' 'package' %}"><div>Packages</div></a></td>
+            </tr>
+            <!--<tr>-->
+                <!--<td><a href="{ url 'admm:rprt' }"><div>Reports</div></a></td>-->
+                <!--<td><span>Reports></span> <ul style="margin:0px;list-style-type:none;"><li><a href="{ url 'admm:rprt' }">Highest blah</a></li><li>Highest blah</li><li>Highest blah</li><li>Highest blah</li></ul>&lt;!&ndash;<i class="fas fa-chart-line"></i>&ndash;&gt;</td>-->
+            <!--</tr>-->
+            {% if user.is_staff %}
+            <tr>
+                <td><a style="" href="{% url 'admm:usersList' %}"><div>Users</div></a></td>
+            </tr>
+            {% endif %}
+            <!--<tr>-->
+                <!--<td><span>Edit in website</span><ul style="list-style-type:none;" hidden><li>About us</li><li>Company Logo</li><li>Follow us</li><li>Contact Us</li><li>Follow Us</li><li>FAQs</li></ul></td>-->
+            <!--</tr>-->
+        </table>
+    </div>

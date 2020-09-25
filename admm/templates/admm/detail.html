@@ -1,0 +1,30 @@
+<form action="/adminsite/{{modelName}}/{{spk}}/delete/" method="post">
+    {% csrf_token %}
+    <div style="float:left">
+        <!--{% if object != 'Complaintdetail'%}-->
+            <a href="/adminsite/{{modelName}}/add/">add new</a> &nbsp;
+        <!--<a href="{{object.get_add_url}}">add new</a>&nbsp;&nbsp;-->
+        <!--{%endif%}-->
+    </div>
+    <div style="float:left">
+        <a href="/adminsite/{{modelName}}/{{spk}}/">Edit</a>&nbsp;&nbsp;
+    </div>
+    <div>
+        <button>delete this</button>
+    </div>
+</form>
+<div>
+    {%for obj in priceobj%}
+        Days: {{obj.noofdays}} <br>
+        Price: {{obj.price}} <br><br>
+    {%endfor%}
+
+    {%for key,value in object.items %}
+        {{key}} : {{value}}<br><br>
+    {%endfor%}
+
+    {% for obj in advimg_objects %}
+        {{obj.id}} {{obj.adv_img}}<br>
+    {% endfor %}
+    <br>
+</div>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Advertisement</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{adv_form.as_table}}
+            <br>
+            {% for cartForm in cart_forms %}
+                {{cartForm.as_table}}
+            {% endfor%}
+        </table>
+        <br>
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order summery</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/index.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/headerJquery.js' %}" rel="script"></script>
+    <script>
+        $(document).ready(function(){
+                if($('#id_odrPlaced').val()==1){
+                    <!--alert('happening');-->
+                    $('#goBack').prop('hidden',false);
+                    $('form').remove();
+                }
+                <!--alert('coming');-->
+                $('#prcdBtn').click(function(){
+                    $('.adv_ids').each(function(){
+                        document.getElementById('id_advIdList').value+=($(this).val()).toString()+" ";
+                    });
+                    $('#id_odrPlaced').val(1);
+                    $('#submitForm').submit();
+                });
+                var ttl=0;
+                $('.price').each(function(){
+                    <!--alert($(this).text());-->
+                    ttl+=parseFloat($(this).text());
+                });
+                <!--alert(ttl);-->
+                $('#id_totalPrice').val(ttl);
+                $('#cpnCodeSend').click(function(){
+                    $('#cpnMsgEmpty').hide();
+                    if($('#cpnInput').val()==''){
+                        $('#cpnMsgEmpty').show();
+                        return;
+                    }
+                    if($('#cpnCodeSend').html()=='Remove'){
+                        $('#cpnDscnt').html('');
+                        $('#cpnInput').prop('readonly',false);
+                        $('#cpnInput').val('');
+                        $('#cpnCodeSend').html('Check');
+                        $(this).siblings('span').hide();
+                        return;
+                    }
+                    var ccode=$('#cpnInput').val();
+                    var selector=this;
+                    $.ajax({
+                        url:'{% url 'signin:cpn_validate' %}',
+                        data:{
+                            'coupon':ccode,
+                        },
+                        dataType:'json',
+                        success: function (data){
+                            if (data['msg']==-1){
+                                $(selector).siblings('div').show();
+                            }
+                            else{
+                                $('#cpnInput').prop('readonly',true);
+                                $('#cpnCodeSend').html('Remove');
+                                $(selector).siblings('span').show();
+                                $('#PreTtlPrice').text($('#id_totalPrice').val());
+                                $('#cpnDscnt').html(parseFloat($('#id_totalPrice').val()/100*parseFloat(data['msg'])));
+
+                                $('#id_totalPrice').val(parseFloat($('#id_totalPrice').val())-parseFloat($('#cpnDscnt').html()));
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+    <style>
+        h1{
+            text-align:center;
+        }
+        .dateInputs input{
+            border-width:0px 0px 1px 0px;
+            border-style:solid;
+            outline:none;
+            width:100px;
+        }
+        .advImg{
+            height:70px;
+            width:160px;
+        }
+        .cartTbl{
+            border-collapse:separate;
+            border-spacing:0 15px;
+            width:95%;
+            border:0px solid black;
+            background-color:lightgray;
+        }
+        .cartTbl tr{
+            height:50px;
+
+            <!--border:0px solid black;-->
+        }
+        span{
+            font-weight:bold;
+        }
+    </style>
+</head>
+{% include 'signin/header.html' %}
+<article style="margin-left:20px;">
+    <h1>Order Summary</h1>
+    <div id="goBack" style="width:100%;text-align:center;border:0px solid;" hidden>
+        <p> Order has already been placed!<br>
+            Go back to <a href="{% url 'signin:cart' %}">cart</a>
+        </p>
+    </div>
+    <form id="submitForm" method="post" enctype="multipart/form-data" action="{% url 'signin:ordr_save' %}" >
+        {% csrf_token%}
+        <input id="id_advIdList" name="advIdList" value="" type="text" hidden>
+        <input type="number" value="{{ttlDscnt}}" name="dscntAmnt" hidden>
+        <input type="number" value="0" id="id_odrPlaced" name="odrPlaced" hidden>
+        <button type="submit" id="sbmtBtn" hidden></button>
+
+        <!--<tr style="text-align:center;font-weight:bold;">-->
+            <!--<th></th>-->
+            <!--<th>View</th>-->
+            <!--<th colspan="3" style="border-left-width:0px;">Advertisement Detail</th>-->
+            <!--<th style="border-left-width:0px;">Dates Selection</th>-->
+            <!--<th style="border-left-width:0px;">Price</th>-->
+            <!--<th style="border-left-width:0px;margin-bottom:150px;"></th>-->
+        <!--</tr>-->
+        <table class="cartTbl" >
+            {% for cart_adv in cartAdvs %}
+                <tr>
+                    <td rowspan="2"></td>
+                    <td rowspan="2" style="text-align:center;"><a href="/adminsite/adv/{{cart_adv.id}}/dtl"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                    <td rowspan="2"><img alt="advertisement image" src="/media/{{cart_adv.id.defaultimgpath}}" class="advImg"></td>
+                    <!--<td>Size: 120x75 </td>-->
+                    <td><span>Size:</span> {{cart_adv.id.height}}x{{cart_adv.id.width}}</td>
+                    <td style=""><span>Registration No:</span> {{cart_adv.id.advregno}}</td>
+                    <td><br>Renting for <span>10 Days</span> <br> ({{cart_adv.startdate}} <strong>To</strong> {{cart_adv.enddate}})</td>
+                    <td id="amount"><input value="{{cart_adv.id}}" type="number" class="adv_ids" hidden></td>
+                    <td rowspan="2" style="margin-left:20px;text-align:center;"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><span>Address: </span><i class="fa fa-map-marker-alt" aria-hidden="true"></i> {{cart_adv.id.addressline1}},{{cart_adv.id.area_areaid}},{{cart_adv.id.city_cityid}}</td>
+                    <td class="dateInputs" ></td>
+                    <td><span class="price">{{cart_adv.price}}</span> Rs.</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table class="cartTbl">
+        <tr>
+            <td colspan="7"></td>
+            <td style="text-align:left;">______<br><span id="PreTtlPrice"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:right;">Coupon Code :
+                <input style="outline:none;border-width:0px 0px 1px 0px;border-style:solid;"  name="cpnCodeInput" id="cpnInput" placeholder="click here to enter" onfocus="$(this).siblings('div,span').hide()">
+                <button type="button" class="btn btn-info" id="cpnCodeSend">Get Discount</button><br>
+                <span style="color:black;display:none;" id="cpnMsgSuccess" >Coupon applied!</span>
+                <div style="color:black;display:none;" id="cpnMsgFail" >Invalid coupon..</div>
+                <p style="color:black;display:none;" id="cpnMsgEmpty" >Enter Something..</p>
+            </td>
+            <td>
+                <span id="cpnDscnt" style="border:0;outline:none;"></span>
+            </td>
+        </tr>
+        <!--{ if cpn is not None }-->
+        <!--<tr>-->
+            <!--<td>{ cpn }% extra discount applied via coupon</td>-->
+        <!--</tr>-->
+        <!--{ endif }-->
+        {% if ttlDscnt is not None%}
+        <tr hidden>
+            <td>{{ttlDscnt}} Rs. total discount</td>
+        </tr>
+        {%endif%}
+        <tr>
+            <td colspan="6" style="text-align:right;padding-right:70px;"><h3>Total amount to pay</h3></td>
+            <td ><input id="id_totalPrice" type="number" readonly style="border:none;outline:none;"></td>
+            <!--<td><button type="button" style="height:50px;width:200px;">Proceed to order</button></td>-->
+        </tr>
+        <tr>
+            <td colspan="8" style="text-align:right;"><button id="prcdBtn" class="btn btn-success" type="button">Proceed for Payment</button></td>
+        </tr>
+    </table>
+    </form>
+</article>
+{% include 'signin/footer.html' %}
+</html>

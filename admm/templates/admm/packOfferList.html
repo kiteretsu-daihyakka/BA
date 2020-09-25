@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of {{packOffr}}s</title>
+
+    <style>
+        .titles{
+            width:100%;
+            height:50px;
+            border-bottom:1px solid black;
+            cursor:pointer;
+            text-align:center;
+        }
+        .objects{
+            text-align:center;
+            width:100%;
+            border-collapse:separate;
+            border-spacing:0 15px;
+        }
+        .objects th{
+            border-bottom:1px solid black;
+            height:80px;
+            background-color:lightgreen;
+            text-transform:uppercase;
+
+        }
+
+        .objects tr{
+            height:60px;
+        }
+        #packOffer{
+            width:100%;
+            direction:rtl;
+        }
+        #packOffer td{
+            border:1px solid black;
+            width:160px;
+            height:40px;
+            text-align:center;
+            cursor:pointer;
+        }
+        a{
+            color:black;
+        }
+        h2{
+            color:green;
+            text-align:center;
+        }
+    </style>
+    {% load static %}
+
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#packBtn').click(function(){
+                $('#id_isPackage').val(1);
+                $('#submitClick').click();
+            });
+            $('#offrBtn').click(function(){
+                $('#id_isPackage').val(0);
+                $('#submitClick').click();
+            });
+        });
+    </script>
+    <script>
+        function confirmDel(ele){
+            if(!confirm('Are you sure you want to delete it?')){
+                return false;
+            }
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <h2 style="margin:0px;text-transform:capitalize;">{{packOffr}}s</h2>
+    <table style="width:100%;text-align:right;padding-right:20px;color:green;">
+        <tr>
+            <td><a href="{% url 'admm:addNewPackOffr' packOffr %}" style="color:green;">Add New</a></td>
+        </tr>
+    </table>
+
+    {% if object_list.count == 0 %}
+        <p>No {{packOffr}}s</p>
+    {% else %}
+    <br>
+
+    <table class="objects" cellspacing="0">
+        <tr>
+            <th></th>
+
+            <!--<th>Id</th>-->
+            <th style="width:220px;">Description</th>
+            <th>Discount</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>No. Of Advertisements</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for obj in  object_list %}
+            <tr style="{% if forloop.counter == 1 %}padding-top:20px;{%endif%}{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+                <td style="width:25px;"><a href="{% url 'admm:packoffr_detail' packOffr obj.id %}"><i class="fa fa-eye"></i></a></td>
+
+                <!--<td>{{obj.id}}</td>-->
+                <td>{%if obj.description is None %}-{%else%}{{obj.description}}{%endif%}</td>
+                <td>{%if obj.discount is None %}-{%else%}{{obj.discount}}{%endif%}</td>
+                <td>{%if obj.startdate is None %}-{%else%}{{obj.startdate}}{%endif%}</td>
+                <td>{%if obj.enddate is None %}-{%else%}{{obj.enddate}}{%endif%}</td>
+                <td>{{obj.advCnt}}</td>
+                <td style="width:25px;" ><a id="editobjLink" href="{% url 'admm:packoffr_edit' packOffr obj.id %}"><i class="fa fa-edit"></i></a></td>
+                <td style="width:25px;" ><a onclick="return confirmDel(this)" id="delobjLink"  href="{% url 'admm:packoffr_del' packOffr obj.id %}"><i class="fa fa-trash"></i></a></td>
+                <!--<td><input type="number" id="id_checkedobjQn" name="checkedobjQn" hidden></td>-->
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    <br>
+
+
+    <!-- <form action="{% url 'admm:listadv' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="number" id="id_isPackage" name="isPackage" value=1 hidden>
+        <button id="submitClick" type="submit" hidden></button>
+    </form> -->
+</article>
+</html>

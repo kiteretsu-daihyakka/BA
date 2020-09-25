@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon detail</title>
+    <style>
+
+
+    h3{
+            color:green;
+            text-align:center;
+        }
+
+        h4{
+            margin:0px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        {% include 'admm/header.html' %}
+    </div>
+    <h3>Coupon Detail</h3>
+    <table style="width:60%;height:340px;">
+        <tr>
+            <td><h4>Coupon id</h4></td>
+            <td>{{cpnObj.id}}</td>
+        </tr>
+        <tr>
+            <td><h4>Date&Time created</h4></td>
+            <td>{{cpnObj.orderdatetime}}</td>
+        </tr>
+        <tr>
+            <td><h4>Discount on order</h4></td>
+            <td>{{cpnObj.discountamount}}</td>
+        </tr>
+        <tr>
+            <td><h4>Start Date</h4></td>
+            <td>{{cpnObj.couponstartdate}}</td>
+        </tr>
+        <tr>
+            <td><h4>End Date</h4></td>
+            <td>{{cpnObj.couponenddate}}</td>
+        </tr>
+        <tr>
+            <td><h4>Minimum cart value</h4></td>
+            <td>{{cpnObj.mincartvalue}}</td>
+        </tr>
+        <tr>
+            <td><h4>Description</h4></td>
+            <td>{{cpnObj.coupondescription}}</td>
+        </tr>
+        <tr>
+            <td><h4>Buyer</h4></td>
+            <td>{{cpnObj.auth_user}}</td>
+        </tr>
+    </table>
+</body>
+</html>

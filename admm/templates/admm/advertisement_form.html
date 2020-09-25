@@ -1,0 +1,83 @@
+{% load staticfiles %}
+<style>
+    table td{
+        border:1px solid black;
+        text-align:center;
+        height:150px;
+        width:170px;
+        cursor:pointer;
+    }
+</style>
+<script src="{% static 'admm/jquery-3.3.1.min.js' %}">
+</script>
+<script>
+    $(document).ready(function(){
+        $('table td').click(function(){
+            $('#imgupld').click();
+        });
+        $('#imgupld').change(function(){
+            $('#imgSaveLink').click();
+            alert();
+            <!--$('#advimg').attr("src","{ static 'admm/images/'"+  +" }");-->
+            <!--document.getElementById('advimg').src='jey.jpg';-->
+            <!--alert(document.getElementById('advimg').src);-->
+        });
+        $('#price,#days').focus(function(){
+            $('#errZero,#errEmpty').hide();
+        });
+        $('#insrtPricingInfo').click(function(){
+            days=$('#days').val();
+            price=$('#price').val();
+            if (days=='' || price==''){
+                $('#errEmpty').show();
+                return;
+            }
+            if ( days<= 0 ||  price<= 0){
+                <!--alert('enter greater than 0 as value.');-->
+                $('#errZero').show();
+                return;
+            }
+            dayId=$('.daysInput').last().attr('id');
+
+            priceId=$('.priceInput').last().attr('id');
+            $('#pricingInfoHolder').append("<tr><td><input value='"+$('#days').val()+"' name='' disabled></td><td><input value='"+$('#price').val()+"' disabled></td></tr>");
+            $('#pricingInfoHolder td').css('height','20px');
+            $('#price,#days').val('');
+        });
+    });
+</script>
+<a href="" id="imgSaveLink"> link</a>
+<form action="/adminsite/upload/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="advImgUpld" id="imgupld" accept="image/*">
+    <button type="submit">Submit</button>
+</form>
+<table>
+    <tr>
+        <td><img src="{{advImgObj}}" alt="upload img again" height="50px" width="50px" id="advimg"></td>
+    </tr>
+</table>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include 'admm/form-template.html' %}
+    <button type="submit">Submit</button>
+</form>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Pricing Info:</label><br>
+    <input id="days" type="number" oninput="this.setCustomValidity('')" placeholder="Number of days" >&nbsp;&nbsp;
+    <input id="price" type="number" placeholder="Price for that many days" >
+    <button type="button" id="insrtPricingInfo" >Insert</button>
+    <p id="errEmpty" hidden>Enter values.</p>
+    <p id="errZero" hidden>Enter values greater than zero.</p>
+</form>
+<table id="pricingInfoHolder">
+    <tr>
+        <th >Days</th>
+        <th >Price</th>
+    </tr>
+    <tr hidden>
+        <td><input class="daysInput" id="days0" value=0></td>
+        <td><input class="priceInput" id="price0" value=0></td>
+    </tr>
+</table>

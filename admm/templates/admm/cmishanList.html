@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Commission</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_pdfDemanded').val(0);
+        });
+    </script>
+    <style>
+        #cmishnList{
+            border:1px solid black;
+            border-right:0;
+        }
+        #cmishnList td{
+            text-align:right;
+            padding-right:15px;
+            border-bottom:1px solid black;
+            border-right:1px solid black;
+        }
+        #cmishnList th{
+            text-align:right;
+            background-color:lightgreen;
+            text-transform:uppercase;
+            height:80px;
+            padding-right:15px;
+            border-bottom:1px solid black;
+            border-right:1px solid black;
+        }
+        #cmishnList tr:last-child td{
+            border-bottom:none;
+        }
+        #cmishnList tr{
+            height:50px;
+        }
+        .sbmtBtn{
+            background-color:transparent;
+            border:none;
+            outline:none;
+            color:green;
+            cursor:pointer;
+        }
+        .sbmtBtn:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article style="margin-bottom:200px;">
+    <h1 STYLE="">COMMISSION</h1>
+    <br>
+
+    <form style="width:100%;text-align:right;" id="actionForm" action="" enctype="multipart/form-data" method="POST" >
+        {% csrf_token %}
+        <input type="number" id="id_isSubCatDmanded" name="demandedSubCat" value="{{isSubCatDmanded}}" hidden>
+        <input type="number" id="id_pdfDemanded" name="pdfDemanded" value="0" hidden>
+        <button class="sbmtBtn" type="submit" onclick="if($('#id_isSubCatDmanded').val()==0){$('#id_isSubCatDmanded').val(1);}else{$('#id_isSubCatDmanded').val(0);}">See {% if isSubCatDmanded is 1 %}Category{% else %}Subcategory{% endif %} Wise</button>
+        <button class="sbmtBtn" type="button" onclick="$('#id_pdfDemanded').val(1);$('#actionForm').submit();">Generate Report</button>
+    </form>
+    <table id="cmishnList" style="width:99%;" cellspacing="0">
+        <tr>
+            <th style="text-align:center;border-right:1px solid black;">Date</th>
+            {% if isSubCatDmanded is 1 %}
+            {% for obj in objects %}
+            <th>{{obj.subcatname}}</th>
+            {% endfor %}
+            {% else %}
+            {% for obj in objects %}
+            <th>{{obj.categoryname}}</th>
+            {% endfor %}
+            {% endif %}
+            <th>Total</th>
+        </tr>
+        {% load getkey %}
+        {% for ro in rows %}
+        <tr>
+            <td style="text-align:center;border-right:1px solid black;">{{ro.date}}</td>
+            {% if isSubCatDmanded is 1 %}
+                {% for obj in objects %}
+                <td>{%if ro|getkey:obj.subcatname is 0 %}-{% else %}{{ro|getkey:obj.subcatname}}{% endif %}</td>
+                {% endfor %}
+            {% else %}
+                {% for obj in objects %}
+                <td>{%if ro|getkey:obj.categoryname is 0 %}-{% else %}{{ro|getkey:obj.categoryname}}{% endif %}</td>
+                {% endfor %}
+            {% endif %}
+            <td style="font-weight:bold;">{{ro.total}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</article>
+</html>

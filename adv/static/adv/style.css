@@ -1,0 +1,45 @@
+.logoTop{
+    height:100px;
+    float:left;
+}
+.signUpLogin{
+    float:right;
+    cursor: pointer;
+}
+.signUpLogin:hover{
+    text-decoration: underline;
+}
+.menuBtn {
+     font-weight:bold;
+     font-size:50px;
+     color:gray;
+     cursor:pointer;
+     float:right;
+     }
+.menuTbl{
+    width:100%;
+    position: fixed;
+    text-align:center;
+}
+.menuTbl table{
+    width:250px;
+    background-color:lightgray;
+    float: right;
+    box-shadow: 1px 1px 8px #3c2f00;
+}
+.menuTbl table tr td span {
+    cursor: pointer;
+}
+.menuTbl span:hover{
+    text-decoration: underline;
+}
+.lightPole{
+    padding-left:150px;
+}
+.alert-secondary{
+    color:black;
+    font-size: 30px;
+}
+.locationMap{
+    height: 50px;
+}

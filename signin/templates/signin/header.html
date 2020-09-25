@@ -1,0 +1,158 @@
+{% load static %}
+
+<html lang="eng">
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static '/signin/css/style_category.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static '/signin/css/style_detail.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static '/signin/css/bootstrap.min.css' %}"/>
+	
+	
+	<link rel="stylesheet" type="text/css" href="{% static '/signin/css/style.css'%}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'signin/css/signup.css' %}"/>
+	
+	<link rel="stylesheet" href="{% static '/signin/fontawesome-free-5.12.0-web/css/all.css' %}"/>
+	<link rel="stylesheet" href="{% static '/signin/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+  <script type="text/javascript" src="{% static 'signin/js/full.js'%}?{% now 'U' %}"></script>
+  
+	<script src="{% static 'signin/js/jquery-3.2.1.min.js' %}"></script>
+	<!--link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"-->
+	
+	<!--script src="https://code.jquery.com/jquery-3.2.1.js"-->
+	
+</head>
+
+<body onload="msginvoke()">
+	
+<!-- Header -->
+
+	<div class="header-se">
+	<div class="logo-se">
+		<a href="{% url 'admm:index' %}"><img src="{% static 'admm/images/BoardingAlleyLogo.png'%}" class='logo'/></a>
+	</div>
+	<div class="user" >
+		<!--<button class="login-btn"  onclick="document.getElementById('id01').style.display='block'">Login/SignUp</button>-->
+        <a href="{%url 'login:log_in' %}"><button class="login-btn">Login/SignUp</button></a>
+	</div>
+	<div class="hd-elements">
+		<div class="se-city">
+		<!--label>   
+		< <input type="text" id="city" name="city" list="city-op" placeholder=" Select city ">  
+		<datalist id="city-op">   -->
+	<select name="city" id="city" onchange="city_area();">
+	
+		<option value="Select">Select city</option>
+    {% for city in cities %}
+		<option value="{{city.cityname}}">{{city.cityname}}</option> 
+	{% endfor %}
+	</select>
+		<!-- </datalist>  
+		</label>  -->
+		</div>
+		<div class="search-se" >
+		<i class="fa fa-search se" aria-hidden="true"></i>
+		</div>
+		<div class="cart-se">
+    	<a href="{% url 'admm:cart' %}" style="color:white;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+    {% if user.is_authenticated %}
+		<sup><span class="badge-ele">{{items}}</span></sup>
+	{% else %}
+		<sup><span class="badge-ele" id="cartitem"></span></sup>	
+    {% endif %}
+		</div>
+		<div class="menu-se" onclick="openNav()">
+		<i class="fa fa-bars" aria-hidden="true"></i>
+		</div>
+	</div>
+	</div>
+	
+<!-- Search bar -->
+<div class="search-bar">
+	<input type="text" id="se-text" class="se-text" name="se-text" placeholder="search here...">
+	<i class="fa fa-arrow-circle-right send-ic" aria-hidden="true"></i>
+</div>
+
+
+<!-- login popup -->
+<div id="id01" class="modal-se">
+  <span onclick="document.getElementById('id01').style.display='none',refrech_page()" class="close" title="Close Modal" >&times;</span>
+  <form name="login_frm" method="post" class="modal_content" id="login_page"  action="{% url 'signin:login' %}" onsubmit="return loginvalidation()">
+	{% csrf_token %}
+	<div class="login_container">
+	  <h1>SignIn</h1>
+      <hr>
+      <label for="email"><b style="color:black;">Email</b></label><br/>
+	  <input type="text" id="login_email" name="email" class="text-css" placeholder="Enter Email"><br/>
+	  <!-- name="email" -->
+      <span class="error_msg" id="loginspan_email"></span><br/><br/>
+      <label for="psw"><b style="color:black;">Password</b></label><br/>
+	  <input type="password" id="login_pass" name="psw" class="text-css" placeholder="Enter Password" ><br/>
+	  <!-- name="psw" -->
+      <span class="error_msg" id="loginspan_pass"></span><br/><br/>
+	  <span class="error_msg" id="invalid_login">{{invalid_log}}</span><br/><br/>
+      <p class="message">Forget <a href="#" onclick="login_switch()" class="login_switch" >password?</a>.</p>
+	  <a href="{% url 'signin:signup_buyer' %}">Create new Account?</a>
+      <div class="clearfix">
+        <button class="btn-css" type="submit" class="signupbtn" >Sign In</button>
+      </div>
+    </div>
+	
+  </form>
+  <form class="modal_content" id="forget-psw" style="display:none" action="" onsubmit="return rec_validation()">
+	<div class="forget-psw">
+	<h1>Password Recovery</h1>
+	<label for="email"><b style="color:black;">Email</b></label><br/>
+	<input type="text" class="text-css" placeholder="Enter Email" name="rec_email" id="rec_email">
+	<span class="error_msg" id="recspan_email"></span><br/><br/>
+	<button class="btn-css" type="submit" class="re-psw">Send password</button>
+	</div>
+  </form>
+</div>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div><img src="{% static 'signin/images/user.png' %}" class="user-img" height="50px" width="50px"></img></div>
+  <form method="post">
+	  {% csrf_token %}
+	  {% if user.is_authenticated %}
+		<a href="{% url 'signin:profileview' %}"><h1 style="margin-left:70px;font-size:20px;color:white;">Hello {{user.first_name}}</h1></a>
+	  {% else %}
+	  <h1 style="margin-left:70px;font-size:20px;color:white;">Hello User</h1>
+
+	  {% endif %}
+  </form>
+  <div class="m-list"><a href="">Home</a></div>
+  <div class="m-list"><a href="">About Us</a></div>
+  <div class="m-list drop-btn"><a href="#">Categories<i class="fa fa-caret-down"></i></a>
+
+  </div>
+  <div class="dropdwn-container">
+    {% for cat in categories %}
+    <div class="m-list"><a href="{% url 'signin:product' cat.id %}">{{cat.categoryname}}</a></div>
+    {% endfor %}
+  </div>
+  {% if user.is_authenticated %}
+  <div class="m-list" ><a href="{% url 'signin:wishlist' %}">Wishlist</a>
+  {% else %}
+  <div class="m-list">
+    <span onclick="wishlist()">Wishlist</span>
+	<form name="itemcont" id="itemcont" method="post" action="{% url 'signin:wishlist' %}" enctype="multipart/form-data">
+		{% csrf_token %}
+		<input type="text" name="item" id="item" size="10"/>
+		<button type="submit" id="itemcontBtn">Submit</button>
+		<!-- <input type="submit" name="itemsu" id="itemsu"/> -->
+	</form>
+	</div>
+  </div>
+  {% endif %}
+  <div class="m-list"><a href="{% url 'signin:wishlist' %}">My Orders</a></div> <!--signin:order instead of signin:wishlist-->
+  <div class="m-list"><a href="">Contact US</a></div>
+  <div class="m-list"><a href="">Help</a></div>
+   {% if user.is_authenticated %}
+  <div class="m-list"><a href="{% url 'signin:logout' %}">Logout  <i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+   {% endif %}
+
+</div>
+</body>
+

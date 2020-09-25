@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table td{
+            border:1px solid black;
+        }
+        .doc_Name{
+            border:None;
+            outline:none;
+            height:25px;
+        }
+        .doc_Name:focus{
+            border:1px solid black;
+        }
+    </style>
+    {% load staticfiles %}
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('.doc_Name').dblclick(function(){
+                $(this).prop('readonly',false);
+            });;
+            $('.doc_Name').change(function(){
+                var tmp=$(this).next('a').attr('href');
+                $(this).next('a').attr('href',tmp+$(this).val());
+                <!--$('#tmpBtn').click();-->
+                $(this).next('a')[0].click();
+            });
+            $('#tmpBtn').click(function(){
+                alert();
+            });
+        });
+    </script>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th></th>
+                <th>Document Name</th>
+            </tr>
+            {% for object in objects%}
+            <tr>
+                <td><a href="del/{{object.docid}}">Delete</a></td>
+                <!--id="docName{{object.docid}}"-->
+                <td ><input class="doc_Name" value="{{object.docname}}"  name="doc_Name{{object.docid}}" readonly/><a hidden href="edit/{{object.docid}}/">d</a> </td>
+            </tr>
+        {% endfor %}
+        </table>
+        <br>
+        {{sellerDocList_form.as_table}}
+        <!--<button onclick="">change url</button>-->
+        <button type="submit">Insert</button>
+
+    </form>
+</body>
+</html>

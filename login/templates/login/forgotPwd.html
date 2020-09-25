@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send OTP</title>
+    {% load staticfiles %}
+    <style>
+        form{
+            width:200px;
+            background-color:none;
+        }
+        form button{
+            margin-left:700px;
+        }
+        input{
+            width:300px;
+            height:30px;
+        }
+        .submitBtn{
+            height:40px;
+            width:130px;
+            background-color:#32CD32;
+            font-size:medium;
+            border:none;
+            cursor:pointer;
+            font-weight:normal;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+            margin-right:20px;
+        }
+    </style>
+</head>
+{% include 'signin/header.html' %}
+<article style="margin:0px;">
+    <h2 style="margin:0px;margin-top:50px;text-align:center;">Reset Password</h2>
+    <form action="{% url 'login:send_otp' %}" method="POST" enctype="multipart/form-data" style="margin-left:520px;margin-top:20px;">
+        {% csrf_token %}
+        <label>Email</label><br>
+        <input type="email" name="email" required><br>
+        <!--<label>Security Question</label><br>-->
+        <!--<input type="text" name="secque" required><br>-->
+        <!--<label>Answer</label><br>-->
+        <!--<input type="text" name="secans" required>-->
+        <br>
+        <input class="submitBtn" type="submit" style="width:300px;" value="Send Code">
+            <input type="number" name="isFromFrgtPage" value=1 hidden>
+        <br><br>
+    </form>
+     <div style="color:red;font-size:20px;width:100%;text-align:center;">
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    </div>
+</article>
+{% include 'signin/footer.html' %}
+</html>

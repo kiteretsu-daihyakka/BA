@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter OTP</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/index.css' %}" rel="stylesheet" type="text/css" >
+    <style>
+        input{
+            width:300px;
+            height:30px;
+        }
+        #submitBtn{
+            height:40px;
+            width:180px;
+            background-color:#32CD32;
+            font-size:medium;
+            margin-top:15px;
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+        }
+    </style>
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+    $(document).ready(function(){
+        $('#otpInput').focus(function(){
+            $('.msg').remove();
+        });
+    });
+    </script>
+</head>
+{% include 'signin/header.html' %}
+<article style="margin:0;margin-top:150px;">
+    <h4 style="font-weight:normal;text-align:center;">
+        An OTP has been sent to email <span style="font-weight:bold;">{{email}}</span>
+    </h4>
+    <br>
+    <br>
+        <form action="{% url 'login:check_otp' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        <table style="width:100%;text-align:center;">
+            <tr>
+                <td style="padding-right:230px;"><label>Enter OTP</label></td>
+            </tr>
+            <tr>
+                <td>
+                    <input  id="otpInput" type="text" name="otp" required>
+                </td>
+            </tr>
+            <tr>
+                <td><button id="submitBtn">Verify</button></td>
+            </tr>
+            <tr class="msg">
+                <td>
+                    {% for msg in messages %}
+                        {{msg}}
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        </form>
+</article>
+{% include 'signin/footer.html' %}
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin list</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+
+    <div style="text-align:center;">
+        <h2 style="color:green;">Admins</h2>
+    </div>
+    {% for msg in messages %}
+        {{msg}}
+    {% endfor %}
+    {% if objects.count > 0 %}
+    <table class="admins">
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Id</th>
+            <th>Last Logged In</th>
+            <th>Name</th>
+            <th>Email Id</th>
+            <th>Date Of Joining</th>
+            <th style="width:220px;">Address</th>
+            <th>Mobile No.</th>
+            <th onload="hideMe()">Branch Id</th>
+        </tr>
+            {% for usrObj in objects %}
+            <tr>
+                <th ><a href="{% url 'admm:usr_detail' usrObj.id %}"><i class="fa fa-eye"></i></a></th>
+                <th ><a id="delAdvLink"  href="{% url 'admm:usr_del' usrObj.id %}"><i class="fa fa-trash"></i></a></th>
+                <td>
+                    {% if usrObj.is_active %}
+                        <a  href="{% url 'admm:lockUnlockUser' usrObj.id usrObj.branchid %}"><i class="fa fa-unlock"></i></a>
+                    {% else %}
+                        <a  href="{% url 'admm:lockUnlockUser' usrObj.id usrObj.branchid %}"><i class="fa fa-lock"></i></a>
+                    {% endif %}
+                </td>
+                <td>{{usrObj.id}}</td>
+                <td>{{usrObj.last_login}}</td>
+                <td>{{usrObj}}</td>
+                <td>{{usrObj.email}}</td>
+                <td>{{usrObj.date_joined}}</td>
+                <td>{{usrObj.addressline1}}, {{usrObj.areaid}}, {{usrObj.areaid.city_cityid}}</td>
+                <td>{{usrObj.mobileno}}</td>
+                <td>{{usrObj.branchid}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</article>
+</html>

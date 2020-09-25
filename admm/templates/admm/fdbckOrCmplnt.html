@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:H="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedbacks,Complaints Detail</title>
+    <style>
+        .head td{
+            border-bottom:1px solid black;
+            background-color:lightgreen;
+            text-transform:uppercase;
+        }
+        .respondBtn{
+            height:40px;
+            width:130px;
+            background-color:#32CD32;
+            font-size:medium;
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            font-family:comic sans;
+            box-shadow:3px 3px gray;
+        }
+        .listTbl{
+            height:140px;
+            text-align:center;
+            <!--border-collapse:separate;-->
+            <!--border-spacing:0 20px;-->
+            width:100%;
+
+        }
+        .head h3{
+            color:black;
+        }
+        .listTbl tr{
+            height:100px;
+        }
+    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <!--<link href="{% static 'admm/css/bootstrap.min.css' %}" type='text/css' rel="stylesheet" />-->
+    <!--<link href="{% static 'admm/mycss/index.css' %}" type='text/css' rel="stylesheet" />-->
+    <!--<link href="{% static 'admm/mycss/universal.css' %}" type='text/css' rel="stylesheet" />-->
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            <!--$('.rspnsForm').on('submit',function(e){-->
+                    <!--e.preventDefault();-->
+
+                    <!--var rspns=$(this).children('.responseTxt').val();-->
+                    <!--var ordrId=$(this).children('.ordrId').val();-->
+                    <!--var row_id=($(this).parent().attr('id').match(/(\d+)/))[0];-->
+                    <!--var tdId='td_'+row_id.toString();-->
+                    <!--var trId='tr_'+row_id.toString();-->
+                    <!--var dtime=$('#'+trId).children('.datetime').html();-->
+                    <!--&lt;!&ndash;alert(dtime);&ndash;&gt;-->
+                    <!--$.ajax({-->
+                        <!--{% if objname == 'feedbacks' %}-->
+                        <!--url:"{% url 'admm:fdbk_save' 1 %}",-->
+                        <!--{% else %}-->
+                        <!--url:"{% url 'admm:fdbk_save' 0 %}",-->
+                        <!--{% endif %}-->
+                        <!--data:{-->
+                            <!--'rspns':rspns,-->
+                            <!--'id':ordrId,-->
+                            <!--'dtime':dtime,-->
+                        <!--},-->
+                        <!--dataType:'json',-->
+                        <!--success: function (data){-->
+                            <!--$('#'+tdId).parent().append("<td>"+data.rspns+"</td><td>"+data.datetime+"</td><td>{{user.first_name}} {{user.last_name}}</td>");-->
+                            <!--$('#'+tdId).remove();-->
+                        <!--}-->
+                    <!--});-->
+            <!--});-->
+        });
+    </script>
+    <script>
+        function myFunc(){
+
+        }
+    </script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article style="margin-left:250px;margin-right:3px;">
+    <br>
+    <h2>List of {{objname}} </h2>
+    <table class="listTbl" style="width:100%;" cellspacing="0">
+        <tr class="head">
+            <td style="border-right:none;"><h3>Buyer</h3></td>
+            <!--<td><h4>Id</h4></td>-->
+            <td style="border-right:none;"><h3>Date & Time</h3></td>
+            <td style="width:200px;border-right:none;"><h3>{% if objname == 'feedbacks' %}Feedback{% else %}Complaint{% endif %}</h3></td>
+            {% if objname == 'feedbacks' %}
+            <td style="border-right:none;"><h3>Rating</h3></td>
+            {%endif%}
+            <td style="width:200px;border-right:none;"><h3>Response</h3></td>
+            <td style="border-right:none;"><h3>Response Date</h3></td>
+            <td style=""><h3>Responded By</h3></td>
+        </tr>
+        {% for obj in object_list %}
+        <tr id="tr_{{forloop.counter}}" style="{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+            <td style="text-align:center;">{{obj.orderid}}</td>
+            <!--<td style="text-align:center;"><a href="{ url 'admm:ordr_detail' obj.id }">{{obj.id}}</a></td>-->
+            <td style="text-align:center;" class="datetime">{{obj.datetime|date:'Y-m-d H:i:s'}}</td>
+            <td style="padding-left:10px;">{{obj.description}}</td>
+            {% if objname == 'feedbacks' %}
+            <td style="text-align:center;">{{obj.rating}}</td>
+            {%endif%}
+            {% if obj.datetime is None %}
+            <td colspan="3" id="td_{{forloop.counter}}">
+                {% if objname == 'feedbacks' %}
+                <form class="rspnsForm" action="{% url 'admm:fdbk_save' 1 %}" enctype="multipart/form-data" method="post">
+                {%else%}
+                <form class="rspnsForm" action="{% url 'admm:fdbk_save' 0 %}" enctype="multipart/form-data" method="post">
+                {%endif%}
+                    {% csrf_token %}
+                    <textarea class="responseTxt" required placeholder="Response Text" style="margin-top:15px;width:200px;height:80px;" NAME="rspns"></textarea>
+                    <button class="respondBtn" type="submit">Respond</button>
+                    <input class="ordrId" value={{obj.id}} type="number" NAME="ODR_id" hidden>
+                    <input class="ordrId" value="{{obj.datetime|date:'Y-m-d H:i:s'}}" type="text" NAME="dtime" hidden>
+                </form>
+            </td>
+            {% else %}
+            <td style="text-align:center;">{{obj.responsetext}}</td>
+            <td style="text-align:center;">{{obj.datetime|date:'Y-m-d H:i:s'}}</td>
+            <td style="text-align:center;">{{obj.auth_user}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</article>
+</html>

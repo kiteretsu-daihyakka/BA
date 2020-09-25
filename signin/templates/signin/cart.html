@@ -1,0 +1,327 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    {% load staticfiles %}
+    <link href="{% static 'admm/mycss/universal.css' %}?{% now 'U' %}" type='text/css' rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'signin/css/bootstrap.min.css' %}">
+
+    <style>
+        a{
+            color:black;
+        }
+        h1{
+            text-align:center;
+        }
+        .dateInputs input{
+            border-width:0px 0px 1px 0px;
+            border-style:solid;
+            outline:none;
+            width:100px;
+        }
+        .advImg{
+            height:70px;
+            width:160px;
+            padding-left:30px;
+        }
+        #cartTbl{
+            border-collapse:separate;
+            border-spacing:0 15px;
+            width:100%;
+            padding-right:20px;
+        }
+        #cartTbl th{
+            height:50px;
+            background-color:lightgreen;
+            text-transform:uppercase;
+        }
+        .price,.TtlPrice{
+            border:none;
+            outline:none;
+            text-align:center;
+            font-size:20px;
+            width:150px;
+        }
+        .ofrDtlRow button{
+            height:25px;
+            width:60px;
+            padding:0;
+            margin-right:5px;
+            cursor:pointer;
+        }
+        .offerInfoTbl table td{
+            padding-left:10px;
+        }
+        .offerInfoTbl table tr{
+            border:1px solid gray;
+            height:50px;
+        }
+        .bginfosss{
+            color:red;
+        }
+        .bg{
+            background-color:lightgray;
+            cursor:not-allowed;
+        }
+        .crsr{
+            cursor:pointer;
+        }
+        .crsr:hover{
+            cursor:pointer;
+            background-color:lightgreen;
+        }
+        </style>
+    <script>
+        function usedBtnClick(ele){
+            if($(ele).val()==1){
+                return;
+            }
+            var disCnt=parseFloat($(ele).parent().siblings('.discount').text());
+            <!--var advId=$(ele).closest('.offerInfoTbl').siblings('.packOffrInfoUnderAdv').find('span i').attr('id').match(/(\d+)/)[0];-->
+            $('.ofrDtlRow button').each(function(){
+                if($(this).val()==1){
+                    $(ele).closest('.offerInfoTbl').siblings('.packOffrInfoUnderAdv').find("div").remove();
+                    return;
+                }
+            });
+            $(ele).closest('.offerInfoTbl').siblings('.packOffrInfoUnderAdv').append("<div>Offer selected, <strong>"+disCnt.toString()+"%</strong> discount given! <a style='color:green;' onclick='showOffers(this)'>Change</a>&nbsp; or &nbsp;<a onclick='removeDiv(this)' style='color:green;' onmouseover='underlineMe(this)'><i class='fas fa-trash' title='remove'></i></a> </div>");
+            $(ele).closest('.offerInfoTbl').siblings('.packOffrInfoUnderAdv').find('span').hide();
+            <!--$(ele).closest('.offerInfoTbl').parent().siblings('.advRow').children('.priceField').find('input').css('color','red');-->
+            <!--$(ele).closest('.offerInfoTbl').parent().siblings('.advRow').children('.priceField').find('input').css('text-decoration','line-through');-->
+
+            var indx=$(ele).attr('class').match(/(\d+)/)[0];
+            var selector='id_dwp'+indx.toString();
+            var realVal=$('#'+selector).val();
+            <!--alert();-->
+            var selector='id_price'+indx.toString();
+            $('#'+selector).val(parseFloat(realVal)-parseFloat(parseFloat(realVal)*parseFloat(disCnt)/100));
+            if($('#'+selector).parent().find('span').length > 0 ){
+                $('#'+selector).parent().find('span').remove();
+            }
+            $('#'+selector).parent().append("<span style='text-decoration:line-through;color:red;'>"+realVal+"</span>");
+            var ttl=0;
+            $('.price').each(function(){
+                ttl+=parseFloat($(this).val());
+            });
+            $('#id_totalPrice').val(ttl);
+            $(ele).closest('.offerInfoTbl').children('table').hide();
+            $('.ofrDtlRow button').each(function(){
+                $(this).html('Use');
+                $(this).val(0);
+            });
+            $(ele).html('<strong>Used</strong>');
+            $(ele).val(1);
+            <!--$(ele).closest('table').parent().siblings('.packOffrInfoUnderAdv').find('span i').css('border','none');-->
+        }
+        function underlineMe(ele){
+            $(ele).css('text-decoration','underlined');
+        }
+        function removeDiv(ele){
+            $('.ofrDtlRow button').each(function(){
+                $(this).html('Use');
+                $(this).val(0);
+            });
+            $(ele).parent().siblings('span').show();
+            var indx=$(ele).parent().parent().attr('id');
+            var selector='id_price'+(indx.match(/(\d+)/))[0];
+            $('#'+selector).siblings('span').remove();
+            var selectorDwp='id_dwp'+(indx.match(/(\d+)/))[0];
+            <!--$('#'+selector).val($('#'+selectorDwp).val());-->
+            $('#'+selectorDwp).change();
+            <!--document.getElementById(selector).selectedIndex="0";-->
+            $(ele).parent().remove();
+        }
+        function showOffers(ele){
+            <!--var indx=$(ele).attr('id');-->
+            <!--var selector='id_dwp'+(indx.match(/(\d+)/))[0];-->
+            <!--if($('#'+selector).val()==''){-->
+                <!--alert('select price first!');-->
+                <!--$('#'+selector).focus();-->
+                <!--return;-->
+            <!--}-->
+            <!--$(ele).css('padding','5px');-->
+            <!--$(ele).css('border','1px solid dodgerblue');-->
+            $('.offerInfoTbl table').hide();
+            $(ele).parent().parent().siblings('.offerInfoTbl').children('table').show();
+        }
+        function calculatePreRequisite(){
+            $('.price').each(function(){
+                if($(this).siblings('span').length > 0){
+                    $('#id_ttlDscntPrice').val(parseFloat($('#id_ttlDscntPrice').val())+parseFloat($(this).siblings('span').html())-$(this).val());
+                }
+            });
+        }
+    </script>
+</head>
+{% include 'signin/header.html' %}
+<article style="margin-left:20px;margin-top:50px;margin-bottom:350px;">
+    <h1>Cart</h1>
+    <!--<input type="text" id="h1" value="tetdfksjdf">-->
+    <!--<button onclick="alert(isTextSelected(document.getElementById('#h1')));">Check if text is selected</button>-->
+    <form method="post" enctype="multipart/form-data" action="{% url 'signin:ordrSummery' %}">
+    {% csrf_token%}
+    <table id="cartTbl" >
+        <tr style="text-align:center;font-weight:bold;">
+            <th>Select</th>
+            <th style="border-left-width:0px;">View</th>
+            <th colspan="3" style="border-left-width:0px;">Detail</th>
+            <th style="border-left-width:0px;">Dates Selection</th>
+            <th style="border-left-width:0px;">Price (Rs.)</th>
+            <th style="border-left-width:0px;margin-bottom:150px;">Remove</th>
+        </tr>
+        {% for cart_adv in cartAdvs %}
+            <tr class="advRow{{cart_adv.id}}">
+                <td rowspan="2" style="text-align:center;"><input type="checkbox"></td>
+                <td rowspan="2" style="text-align:center;"><a style="color:black;" href="{% url 'signin:product_detail' cart_adv.id %}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                <td rowspan="2"><img alt="advertisement image" src="/media/{{cart_adv.id.defaultimgpath}}" class="advImg"></td>
+                <!--<td>Size: 120x75 </td>-->
+                <td><strong>Size:</strong> {{cart_adv.id.height}}x{{cart_adv.id.width}}</td>
+                <td style="">
+                    <!--{{cart_adv.id.subcategory_subcatid.catid.id}}-->
+                    {% if cart_adv.id.subcategory_subcatid.catid.id == 2 %}
+                        <strong>Enter Quantity: </strong>
+                        <input type="number" min="{{cart_adv.id.minquantity}}" required style="width:100px;">
+                    {%else%}
+                        <strong>Registratin No:</strong> {{cart_adv.id.advregno}}
+                    {%endif%}
+                </td>
+                <td style="padding-left:30px;"><strong>Days: </strong><select id="id_dwp{{cart_adv.id}}"  class="daysDD" required>
+                            <option></option>
+                            {% for dwp in cart_adv.id.durationwisepricing_set.all %}
+                                <option value="{{dwp.price}}">{{dwp.noofdays}}</option>
+                            {% endfor %}
+                            </select>
+                </td>
+                <td><input value="{{cart_adv.id}}" type="number" name="adv{{forloop.counter}}" hidden style=""></td>
+                <td rowspan="2" style="margin-left:20px;text-align:center;"><a class="remAdvFrmCart" name="rem{{cart_adv.id}}"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
+            </tr>
+            <tr class="advRow">
+                <td colspan="2"><strong>Location: </strong><i class="" aria-hidden="true"></i> {{cart_adv.id.addressline1}},{{cart_adv.id.area_areaid}},{{cart_adv.id.city_cityid}}</td>
+                <td class="dateInputs" style="padding-left:30px;">
+                    <strong>Select dates : </strong><span class="calIcon"><i class="fas fa-calendar" style="font-size:30px;"></i></span> <span class="advIdStore" hidden>{{cart_adv.id.advid}}</span> <br>
+                    <input type="text" placeholder="Start Date" class="sdateInput" id="sdate{{cart_adv.id.advid}}" name="sdate{{forloop.counter}}" readonly style="width:120px;" required > <span>To</span>
+                    <input type="text" placeholder="End  Date" class="edateInput" id="edate{{cart_adv.id.advid}}" name="edate{{forloop.counter}}" required readonly style="width:120px;" ><br>
+                    <span id="dateErrMsg{{cart_adv.id.advid}}" style="color:red;display:none;">Please Select consecutive free dates..</span>
+                    <span id="dateScssMsg{{cart_adv.id.advid}}" style="color:green;display:none;">Dates selected!</span>
+                    <!--<h1>Calender</h1>-->
+
+                            <table class="clndr" id="calendar{{cart_adv.id.advid}}" style="top:230px;left:400px;width:200px;position:fixed;display:none;text-align:right;background-color:white;border:1px solid black;border-bottom:1px solid black;box-shadow:5px 5px lightgray;" cellpadding="4" >
+                                <tr>
+                                    <td colspan="7">
+                                        <h6 class="card-header" id="monthAndYear{{cart_adv.id.advid}}" style="text-align:left;"></h6>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <a  class="prev" style="float:left;">&lt; Prev</a>
+                                        <a  class="next" style="float:right;">Next &gt;</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                                <tbody id="calendar-body{{cart_adv.id.advid}}" style="text-align:right;border:1px solid black;">
+
+                                </tbody>
+                            </table>
+                            <!--<br>-->
+                            <!--<form class="form-inline">-->
+                                <!--<label class="lead mr-2 ml-2">Jump To: </label>-->
+                                <!--<select class="form-control col-sm-4" name="month" id="month" onchange="jump()">-->
+                                    <!--<option value="1">Jan</option>-->
+                                    <!--<option value="2">Feb</option>-->
+                                    <!--<option value="3">Mar</option>-->
+                                    <!--<option value="4">Apr</option>-->
+                                    <!--<option value="5">May</option>-->
+                                    <!--<option value="6">Jun</option>-->
+                                    <!--<option value="7">Jul</option>-->
+                                    <!--<option value="8">Aug</option>-->
+                                    <!--<option value="9">Sep</option>-->
+                                    <!--<option value="10">Oct</option>-->
+                                    <!--<option value="11">Nov</option>-->
+                                    <!--<option value="12">Dec</option>-->
+                                <!--</select>-->
+
+                                <!--<label for="year"></label>-->
+                                <!--<select class="form-control col-sm-4" name="year" id="year" onchange="jump()">-->
+                                    <!--<option value="2015">2015</option>-->
+                                    <!--<option value="2016">2016</option>-->
+                                    <!--<option value="2017">2017</option>-->
+                                    <!--<option value="2018">2018</option>-->
+                                    <!--<option value="2019">2019</option>-->
+                                    <!--<option value="2020">2020</option>-->
+                                    <!--<option value="2021">2021</option>-->
+                                    <!--<option value="2022">2022</option>-->
+                                    <!--<option value="2023">2023</option>-->
+                                <!--</select>-->
+                            <!--</form>-->
+                </td>
+                <td class="priceField"><input type="number" id="id_price{{cart_adv.id}}" name="price{{forloop.counter}}" class="price" readonly><br></td>
+            </tr>
+            {% if cart_adv.id.offercoveringadvs_set.all|length > 0 %}
+            <tr>
+                <td colspan="1"></td>
+                <td colspan="3" class="packOffrInfoUnderAdv" style="" id="id_packOffrInfoUnderAdv{{cart_adv.id}}"><span>{{cart_adv.id.offercoveringadvs_set.all|length}} offer(s) applicable! <i class="fas fa-info" onclick="showOffers(this)" id="id_showOffrs{{cart_adv.id}}" style="cursor:pointer;padding:5px;"></i></span></td>
+                <td colspan="3" class="offerInfoTbl" style="">
+                    <table style="width:600px;position:fixed;margin-left:-75px;bottom:250px;text-align:center;display:none;background-color:lightgreen;box-shadow:2px 2px gray;">
+                        <tr>
+                            <td colspan="3" ><span style="font-size:larger;text-transform:uppercase;"><big style="">O</big>ffers</span> <span class="closePopUp" style="cursor:pointer;float:right;padding-right:10px;"><i class="fas fa-times" style="font-size:larger;"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;text-transform:uppercase;">Description</td>
+                            <td style="font-weight:bold;text-transform:uppercase;">Discount (%)</td>
+                            <td></td>
+                        </tr>
+                    {% for offr in cart_adv.id.offercoveringadvs_set.all %}
+                        <tr class="ofrDtlRow">
+                            <td>{{offr.id.description}}</td>
+                            <td class="discount" style="font-weight:bold;">{{offr.id.discount}}</td>
+                            <td><button class="useBtn{{cart_adv.id}}" onclick="usedBtnClick(this)" type="button" value="0">Use</button> </td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        {% if cartAdvs|length == 0 %}
+        <tr>
+            <td colspan="7" style="text-align:center;">No Advertisements</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7" style="text-align:right;">______<br><span id="PreTtlPrice"></span></td>
+        </tr>
+        <tr>
+            <td colspan="7" style="text-align:right;"></td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align:right;padding-right:70px;"><h3>Total</h3></td>
+            <td><input id="id_totalPrice" type="number" name="totalPrice" class="TtlPrice" readonly></td>
+            <!--<td><button type="button" style="height:50px;width:200px;">Proceed to order</button></td>-->
+        </tr>
+        <tr>
+            <td colspan="8" style="text-align:right;"><button id="prcdBtn" type="submit" onclick="calculatePreRequisite()" style="">Proceed to Book</button> <input id="id_ttlDscntPrice" type="number" value="0" name="ttlDscntPrice"></td>
+        </tr>
+        {% endif %}
+    </table>
+    </form>
+    <input type="date">
+</article>
+{% include 'signin/footer.html' %}
+    <script>
+        var calClickUrl="{% url 'signin:fetch_booked_dates' %}";
+    </script>
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'admm/headerJquery.js' %}" rel="script"></script>
+    <!--<script src="{% static 'signin/js/calendar.js' %}?{% now 'U' %}" rel="script"></script>-->
+    <script src="{% static 'signin/js/cart.js' %}"></script>
+</html>

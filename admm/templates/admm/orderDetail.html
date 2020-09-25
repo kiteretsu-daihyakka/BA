@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Detail</title>
+    <style>
+        h3{
+            color:green;
+        }
+
+        h4{
+            margin:0px;
+        }
+        .odredAdvList th{
+            height:80px;
+            background-color:lightgreen;
+            border-bottom:1px solid black;
+            text-transform:uppercase;
+        }
+    </style>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'admm/fontawesome-free-5.12.0-web/css/all.css' %}">
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+</head>
+{% include 'admm/header.html' %}
+{% include 'admm/leftSideBar.html' %}
+<article>
+    <h3>Order Detail</h3>
+    <table style="width:40%;height:140px;">
+        <!--<tr>-->
+            <!--<td><h4>Order Id</h4></td>-->
+            <!--<td>{{ordrObj.id}}</td>-->
+        <!--</tr>-->
+        <tr>
+            <td><h4>Date and Time</h4></td>
+            <td>{{ordrObj.orderdatetime}}</td>
+        </tr>
+        <tr>
+            <td><h4>Total Discount on order</h4></td>
+            <td>{{ordrObj.discountamount}}</td>
+        </tr>
+        <tr>
+            <td><h4>Buyer</h4></td>
+            <td>{{ordrObj.auth_user}}</td>
+        </tr>
+        <!--<tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr><tr>-->
+            <!--<td>Date and Time</td>-->
+            <!--<td>{{ordrObj.orderdatetime}}</td>-->
+        <!--</tr>-->
+
+    </table>
+    <br>
+    <h3>Ordered Advertisement</h3>
+    <table class="odredAdvList" style="width:100%;text-align:center;" cellspacing="0">
+        <tr>
+            <th>View</th>
+            <th>Adv. Image</th>
+            <th>Address</th>
+            <th>Area</th>
+            <th>City</th>
+            <th>Price</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Quantity</th>
+        </tr>
+        {% for ordrAdv in ordrAdvs %}
+            <tr style="{% if forloop.counter == 1 %}padding-top:20px;{%endif%}{% if forloop.counter|divisibleby:2 %}background-color:lightgray;{%endif%}">
+                <td><a  href="{% url 'admm:adv_detail' ordrAdv.advertisement_advid %}"><i class="fa fa-eye"></i></a></td>
+                <td><img style="padding:3px;" src="/media/{{ordrAdv.advertisement_advid.defaultimgpath}}" height="80px" width="90px"></td>
+                <td>{{ordrAdv.advprice}}</td>
+                <td>{{ordrAdv.advstartdate}}</td>
+                <td>{{ordrAdv.advenddate}}</td>
+                <td>{{ordrAdv.quantity}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</article>
+</html>

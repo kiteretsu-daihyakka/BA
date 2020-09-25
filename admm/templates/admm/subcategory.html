@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subcategories</title>
+    <style>
+        table td{
+            border:1px solid black;
+        }
+        .scat_Name,.commission{
+            border:None;
+            outline:none;
+            height:25px;
+        }
+        .scat_Name,.commission:focus{
+            border:1px solid black;
+        }
+    </style>
+    {% load staticfiles %}
+    <script src="{% static 'admm/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('.scat_Name,.commission').dblclick(function(){
+                $(this).prop('readonly',false);
+            });;
+            $('.scat_Name,.commission').change(function(){
+                var tmp=$(this).next('a').attr('href');
+                $(this).next('a').attr('href',tmp+$(this).val())+'/'+;
+                $(this).next('a')[0].click();
+            });
+        });
+    </script>
+</head>
+<body>
+<form action="/adminsite/subcategories/edit/{{object.id}}/" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th></th>
+                <th>Subcategory</th>
+            </tr>
+            {% for object in objects%}
+            <tr>
+                <td><a href="/adminsite/subcategories/del/{{object.id}}">Delete</a></td>
+                <!--id="docName{{object.docid}}"-->
+                <td ><input class="scat_Name" value="{{object.subcatname}}"  name="scat_Name{{object.id}}" readonly/><button type="submit" hidden>d</button> </td>
+                <td><input class="commission" value="{{object.commission}}"  name="cmsn{{object.id}}" readonly><button type="submit" hidden>d</button></td>
+            </tr>
+        {% endfor %}
+        </table>
+</form>
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{subcat_form.as_table}}
+            <!--<button onclick="">change url</button>-->
+            <button type="submit">Insert</button>
+
+    </form>
+</body>
+</html>
